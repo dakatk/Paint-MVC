@@ -20,7 +20,7 @@ public class ToolBar extends PopupWindow<ToolsController> {
     ToolBar() throws IOException {
 
         super(null, FilesEnum.TOOLBAR_FXML);
-        this.setShowOffset(70.0, 0.0);
+        this.setShowOffset(-70.0, 0.0);
     }
 
     public void setCanvas(@NotNull DrawableCanvas canvas) {

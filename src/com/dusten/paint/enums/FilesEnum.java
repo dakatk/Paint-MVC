@@ -8,11 +8,14 @@ package com.dusten.paint.enums;
  */
 public enum FilesEnum {
 
+    // fxml files
     MAIN_FXML("PaintApp.fxml"),
     MENUHELPER_FXML("MenuHelper.fxml"),
     IMAGEHELPER_FXML("ImageHelper.fxml"),
     RESIZEPOPUP_FXML("ResizePopup.fxml"),
     TOOLBAR_FXML("ToolBar.fxml"),
+    TOOLSETTINGS_FXML("ToolSettings.fxml"),
+    // icon image files
     PAINTBUCKET_ICON("resources/PaintBucket.png"),
     LINETOOL_ICON("resources/LineTool.png");
 
