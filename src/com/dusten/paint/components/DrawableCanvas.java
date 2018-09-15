@@ -15,7 +15,9 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,19 +27,27 @@ import java.util.List;
  */
 public class DrawableCanvas extends Canvas {
 
-    // weight of the lines to be drawn
-    // TODO make variable from edit menu
-    private static final double LINE_STROKE = 2.0;
+    public static final double DEFAULT_FILL_TOLERANCE = 0.1;
+    public static final double DEFAULT_LINE_WEIGHT = 2.0;
 
     private ImageController imageController;
     private GraphicsContext context;
     private ToolsEnum toolType;
 
     private List<PaintOperator> editHistory;
-    private Line tempLine;
     private int editIndex;
 
+    private double fillTolerance;
+    private double lineWeight;
+
+    private Rectangle tempRect;
+    private Circle tempElipse;
+    private Line tempLine;
+
     public DrawableCanvas() {
+
+        this.fillTolerance = DEFAULT_FILL_TOLERANCE;
+        this.lineWeight = DEFAULT_LINE_WEIGHT;
 
         this.editHistory = new ArrayList<>();
         this.editIndex = -1;
@@ -48,7 +58,6 @@ public class DrawableCanvas extends Canvas {
         this.context = this.getGraphicsContext2D();
         this.context.setFill(Color.WHITE);
         this.context.setStroke(Color.WHITE);
-        this.context.setLineWidth(LINE_STROKE);
 
         this.createAndSetEvents();
     }
@@ -79,7 +88,7 @@ public class DrawableCanvas extends Canvas {
             if(this.toolType == null || !this.toolType.equals(ToolsEnum.LINE))
                 event.consume();
             else
-                this.addEdit(new LineOperator(this.tempLine));
+                this.addEdit(new LineOperator(this.tempLine, this.lineWeight));
         });
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
@@ -97,7 +106,7 @@ public class DrawableCanvas extends Canvas {
                 double width = this.getWidth();
                 double height = this.getHeight();
 
-                this.addEdit(new BucketOperator(this.getSnapshot(), fill, mouseX, mouseY, width, height));
+                this.addEdit(new BucketOperator(this.getSnapshot(), fill, this.fillTolerance, mouseX, mouseY, width, height));
             }
         });
     }
@@ -209,6 +218,14 @@ public class DrawableCanvas extends Canvas {
         this.editIndex = -1;
 
         this.addEdit(new ImageOperator(image, this.getWidth(), this.getHeight()));
+    }
+
+    public void setLineWeight(double lineWeight) {
+        this.lineWeight = lineWeight;
+    }
+
+    public void setFillTolerance(double fillTolerance) {
+        this.fillTolerance = fillTolerance;
     }
 
     public void setToolType(@Nullable ToolsEnum toolType) {

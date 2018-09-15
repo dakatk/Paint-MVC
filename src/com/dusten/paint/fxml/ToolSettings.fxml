@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
 
 <TabPane tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="com.dusten.paint.controllers.ToolSettingsController">
 
     <Tab text="Bucket">
+        <HBox>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+            </padding>
+
+            <Label text="Tolerance (%): ">
+                <HBox.margin>
+                    <Insets left="5.0" right="15.0" />
+                </HBox.margin>
+            </Label>
+
+            <Slider fx:id="fillTolerance" majorTickUnit="5.0" max="25.0" minorTickCount="1"
+                    showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS">
+                <tooltip>
+                    <Tooltip text="Percent tolerance for color to be replaced" />
+                </tooltip>
+            </Slider>
+        </HBox>
     </Tab>
 
     <Tab text="Draw">
     </Tab>
 
     <Tab text="Line">
+        <HBox>
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
+            </padding>
+
+            <Label text="Weight (px): ">
+                <HBox.margin>
+                    <Insets left="5.0" right="15.0" />
+                </HBox.margin>
+            </Label>
+
+            <Slider fx:id="lineWeight" majorTickUnit="2.0" max="10.0" minorTickCount="1"
+                    showTickLabels="true" showTickMarks="true" snapToTicks="true" HBox.hgrow="ALWAYS">
+                <tooltip>
+                    <Tooltip text="Line draw weight" />
+                </tooltip>
+            </Slider>
+        </HBox>
     </Tab>
 
     <Tab text="Square">

@@ -2,6 +2,8 @@ package com.dusten.paint.controllers;
 
 import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
+import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolSettingsPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,21 +20,32 @@ import java.util.ResourceBundle;
  *
  * Controller for ToolBar.fxml
  */
-public class ToolsController implements Initializable {
+public class ToolBarController implements Initializable {
 
     @FXML private ImageButton paintBucketButton;
     @FXML private ImageButton lineToolButton;
     @FXML private ColorPicker colorPicker;
+
+    private ToolSettingsPopup toolSettings;
+    private ToolBar parent;
 
     private DrawableCanvas canvas;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        try{
+            this.toolSettings = new ToolSettingsPopup();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         this.updateColorAction();
 
         ToggleGroup buttonGroup = new ToggleGroup();
         buttonGroup.selectedToggleProperty().addListener((value, oldToggle, newToggle) -> {
+
+            if(this.canvas == null)
+                return;
 
             ImageButton nextToggle = (ImageButton)buttonGroup.getSelectedToggle();
 
@@ -67,9 +80,28 @@ public class ToolsController implements Initializable {
             this.canvas.setColor(colorValue);
     }
 
+    /**
+     * Shows the ToolBar settings popup windo
+     */
+    @FXML
+    private void showSettingsAction() {
+
+        if(this.toolSettings == null)
+            return;
+
+        this.toolSettings.showRelativeTo(this.parent);
+    }
+
     public void setCanvas(@NotNull DrawableCanvas canvas) {
 
         this.canvas = canvas;
         this.canvas.setColor(this.colorPicker.getValue());
+
+        if(this.toolSettings != null)
+            this.toolSettings.setCanvas(this.canvas);
+    }
+
+    public void setParent(@NotNull ToolBar parent) {
+        this.parent = parent;
     }
 }

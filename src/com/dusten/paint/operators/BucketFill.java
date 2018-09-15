@@ -18,15 +18,17 @@ import java.util.Stack;
  */
 class BucketFill extends Task<Void> {
 
-    private static final double EPSILON = 0.15;
-
     private WritableImage canvasImage;
     private Point clickedPoint;
     private Color fillColor;
 
-    BucketFill(WritableImage canvasImage, Paint fillColor, double mouseX, double mouseY) {
+    private double epsilon;
 
+    BucketFill(WritableImage canvasImage, Paint fillColor, double epsilon, double mouseX, double mouseY) {
+
+        this.epsilon = epsilon;
         this.canvasImage = canvasImage;
+
         this.fillColor = (Color)fillColor;
         this.clickedPoint = new Point((int)mouseX, (int)mouseY);
     }
@@ -128,6 +130,6 @@ class BucketFill extends Task<Void> {
      * @return
      */
     private boolean withinTolerance(double a, double b) {
-        return Math.abs(a - b) < EPSILON;
+        return Math.abs(a - b) < this.epsilon;
     }
 }

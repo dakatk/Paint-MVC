@@ -12,19 +12,20 @@ import javafx.scene.paint.Paint;
  */
 public class BucketOperator implements PaintOperator {
 
-    private WritableImage image;
     private Task<Void> subroutine;
+    private WritableImage image;
 
     private double canvasWidth;
     private double canvasHeight;
 
-    public BucketOperator(WritableImage image, Paint fill, double mouseX, double mouseY, double canvasWidth, double canvadHeight) {
+    public BucketOperator(WritableImage image, Paint fill, double epsilon, double mouseX,
+                          double mouseY, double canvasWidth, double canvadHeight) {
 
         this.canvasHeight = canvadHeight;
         this.canvasWidth = canvasWidth;
         this.image = image;
 
-        this.subroutine = new BucketFill(this.image, fill, mouseX, mouseY);
+        this.subroutine = new BucketFill(this.image, fill, epsilon, mouseX, mouseY);
         new Thread(this.subroutine).start();
     }
 

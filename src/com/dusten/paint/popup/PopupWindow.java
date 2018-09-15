@@ -47,9 +47,11 @@ public class PopupWindow<T> extends Stage {
      */
     public void showRelativeTo(Stage stage) {
 
-        this.setX(stage.getX() + this.offsetX);
-        this.setY(stage.getY() + this.offsetY);
+        if(stage != null) {
 
+            this.setX(stage.getX() + this.offsetX);
+            this.setY(stage.getY() + this.offsetY);
+        }
         this.toBack();
         this.show();
     }
