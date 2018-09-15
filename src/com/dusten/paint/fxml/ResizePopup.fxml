@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dusten.paint.components.IntegerField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane alignment="center" hgap="5" vgap="8" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dusten.paint.controllers.ResizeController">
+
+    <padding>
+        <Insets bottom="10" left="10" right="10" top="10" />
+    </padding>
+
+    <Label GridPane.columnSpan="4" GridPane.rowIndex="1">Canvas Width:</Label>
+    <IntegerField fx:id="widthInput" prefWidth="100.0" promptText="Width" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    <Button fx:id="widthInc" onAction="#incrementWidth" GridPane.columnIndex="2" GridPane.rowIndex="1">+</Button>
+    <Button fx:id="widthDec" onAction="#decrementWidth" GridPane.columnIndex="3" GridPane.rowIndex="1">-</Button>
+
+    <Label GridPane.rowIndex="2">Canvas Height:</Label>
+    <IntegerField fx:id="heightInput" prefWidth="100.0" promptText="Height" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+    <Button fx:id="heightInc" onAction="#incrementHeight" GridPane.columnIndex="2" GridPane.rowIndex="2">+</Button>
+    <Button fx:id="heightDec" onAction="#decrementHeight" GridPane.columnIndex="3" GridPane.rowIndex="2">-</Button>
+
+    <Button onAction="#cancelAction" GridPane.halignment="RIGHT" GridPane.rowIndex="3">Cancel</Button>
+    <Button onAction="#confirmAction" prefWidth="65.0" GridPane.columnIndex="1"
+            GridPane.halignment="RIGHT" GridPane.rowIndex="3"> Ok </Button>
+
+</GridPane>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<MenuBar xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+         fx:controller="com.dusten.paint.controllers.MenuController">
+
+    <Menu text="File">
+        <MenuItem text="Open..." onAction="#loadAction"
+                  accelerator="Shortcut+O" />
+
+        <MenuItem fx:id="saveMenu" disable="true" text="Save..."
+                  onAction="#saveAction" accelerator="Shortcut+S" />
+
+        <MenuItem fx:id="saveAsMenu" disable="true" text="Save As..."
+                  onAction="#saveAsAction" accelerator="Shortcut+Shift+S" />
+
+        <MenuItem text="Close" onAction="#closeAction"
+                  accelerator="Shortcut+Q" />
+    </Menu>
+    <Menu text="Edit">
+        <MenuItem text="Canvas Size..." onAction="#resizeAction"
+                  accelerator="Shortcut+Shift+R" />
+
+        <MenuItem fx:id="undoMenu" text="Undo" onAction="#undoAction"
+                  accelerator="Shortcut+Z" disable="false" />
+
+        <MenuItem fx:id="redoMenu" text="Redo" onAction="#redoAction"
+                  accelerator="Shortcut+Shift+Z" disable="true" />
+    </Menu>
+    <Menu text="Toolbar">
+        <MenuItem fx:id="showToolsMenu" text="Show..." onAction="#showToolbarAction"
+                  accelerator="Shortcut+T" disable="true" />
+
+        <MenuItem fx:id="hideToolsMenu" text="Hide..." onAction="#hideToolbarAction"
+                  accelerator="Shortcut+Shift+T" />
+    </Menu>
+
+</MenuBar>

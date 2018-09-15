@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.dusten.paint.components.DrawableCanvas?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.dusten.paint.controllers.ImageController"
+           prefWidth="460.0" prefHeight="460.0">
+
+        <Rectangle fx:id="background" styleClass="imageCanvas" StackPane.alignment="CENTER"/>
+        <DrawableCanvas fx:id="canvas" StackPane.alignment="CENTER" />
+
+</StackPane>

@@ -1,0 +1,9 @@
+.parentPane {
+    -fx-background-color: "#D9D9D9";
+}
+
+.imageCanvas {
+    -fx-fill: "WHITE";
+    -fx-stroke: "#ADADAD";
+    -fx-stroke-width: 1;
+}
