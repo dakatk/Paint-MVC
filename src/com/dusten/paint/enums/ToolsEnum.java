@@ -6,15 +6,17 @@ import javafx.scene.Cursor;
  * @author Dusten Knull
  *
  * Descriptors for the higher level values for each tool
- * (currently the icon and tooltip). These objects are
- * also used to differentiate between which tool is
+ * (currently the icon, tooltip, and mouse cursor). These objects
+ * are also used to differentiate between which tool is
  * currently active (e.g., 'toolType.equals(ToolsEnum.LINE)')
  */
 public enum ToolsEnum {
 
     LINE(FilesEnum.LINETOOL_ICON, Cursor.CROSSHAIR, "Line Tool"),
     // TODO image cursor
-    BUCKET(FilesEnum.PAINTBUCKET_ICON, Cursor.DEFAULT, "Paint Bucket Tool");
+    BUCKET(FilesEnum.PAINTBUCKET_ICON, Cursor.DEFAULT, "Paint Bucket Tool"),
+    RECTANGLE_FILL(FilesEnum.RECTANGLEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Rectangle Tool"),
+    RECTANGLE_DRAW(FilesEnum.RECTANGLEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Rectangle Tool");
 
     private FilesEnum iconURL;
     private String tooltip;

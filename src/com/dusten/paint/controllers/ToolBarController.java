@@ -2,6 +2,7 @@ package com.dusten.paint.controllers;
 
 import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
+import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.main.ToolBar;
 import com.dusten.paint.popup.ToolSettingsPopup;
 import com.sun.istack.internal.NotNull;
@@ -24,6 +25,7 @@ public class ToolBarController implements Initializable {
 
     @FXML private ImageButton paintBucketButton;
     @FXML private ImageButton lineToolButton;
+    @FXML private ImageButton rectangleToolButton;
     @FXML private ColorPicker colorPicker;
 
     private ToolSettingsPopup toolSettings;
@@ -57,6 +59,7 @@ public class ToolBarController implements Initializable {
 
         this.paintBucketButton.setToggleGroup(buttonGroup);
         this.lineToolButton.setToggleGroup(buttonGroup);
+        this.rectangleToolButton.setToggleGroup(buttonGroup);
     }
 
     /**
@@ -84,12 +87,15 @@ public class ToolBarController implements Initializable {
      * Shows the ToolBar settings popup windo
      */
     @FXML
-    private void showSettingsAction() {
+    public void showSettingsAction() {
 
-        if(this.toolSettings == null)
-            return;
-
+        if(this.toolSettings == null) return;
         this.toolSettings.showRelativeTo(this.parent);
+    }
+    public void closeSettingsWindow() {
+
+        if(this.toolSettings == null) return;
+        this.toolSettings.close();
     }
 
     public void setCanvas(@NotNull DrawableCanvas canvas) {
@@ -102,6 +108,14 @@ public class ToolBarController implements Initializable {
     }
 
     public void setParent(@NotNull ToolBar parent) {
+
         this.parent = parent;
+        if(this.toolSettings != null)
+            this.toolSettings.setToolBar(this.parent);
+
+    }
+
+    public void setRectangleToolMode(@NotNull ToolsEnum toolType) {
+        this.rectangleToolButton.setEnumToolType(toolType);
     }
 }

@@ -32,10 +32,11 @@ public class BucketOperator implements PaintOperator {
     @Override
     public void draw(GraphicsContext context) {
 
+        context.clearRect(0.0, 0.0, this.canvasWidth, this.canvasHeight);
         context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight);
 
-        this.subroutine.setOnSucceeded(event -> {
-            context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight);
-        });
+        this.subroutine.setOnSucceeded(event ->
+                context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight)
+        );
     }
 }

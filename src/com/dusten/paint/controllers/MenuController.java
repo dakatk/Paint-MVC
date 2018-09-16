@@ -84,6 +84,8 @@ public class MenuController implements Initializable {
      */
     @FXML
     private void closeAction() {
+
+        if(this.mainStage == null) return;
         this.mainStage.getOnCloseRequest().handle(new WindowEvent(this.mainStage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
@@ -144,6 +146,15 @@ public class MenuController implements Initializable {
 
         this.showToolsMenu.setDisable(false);
         this.hideToolsMenu.setDisable(true);
+    }
+
+    /**
+     *
+     */
+    @FXML
+    private void showToolSettingsAction() {
+
+        this.toolBar.showSettingsWindow();
     }
 
     /**

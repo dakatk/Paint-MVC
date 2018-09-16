@@ -47,6 +47,9 @@ public class PopupWindow<T> extends Stage {
      */
     public void showRelativeTo(Stage stage) {
 
+        if(this.isShowing())
+            this.requestFocus();
+
         if(stage != null) {
 
             this.setX(stage.getX() + this.offsetX);

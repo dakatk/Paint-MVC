@@ -18,10 +18,12 @@ public class ImageButton extends ToggleButton {
     private ToolsEnum enumToolType;
 
     public ImageButton(@NamedArg("toolType") String toolType) {
+        this.setEnumToolType(ToolsEnum.valueOf(toolType));
+    }
 
-        this.enumToolType = ToolsEnum.valueOf(toolType);
+    private ImageView createGraphic(String url) {
 
-        Image baseImage = new Image(getClass().getResourceAsStream(this.enumToolType.getIconURL()));
+        Image baseImage = new Image(getClass().getResourceAsStream(url));
         ImageView graphic = new ImageView(baseImage);
 
         graphic.setPreserveRatio(true);
@@ -29,7 +31,14 @@ public class ImageButton extends ToggleButton {
         graphic.setFitWidth(30.0);
         graphic.setFitHeight(40.0);
 
-        this.setGraphic(graphic);
+        return graphic;
+    }
+
+    public void setEnumToolType(ToolsEnum enumToolType) {
+
+        this.enumToolType = enumToolType;
+
+        this.setGraphic(this.createGraphic(this.enumToolType.getIconURL()));
         this.setTooltip(new Tooltip(this.enumToolType.getTooltip()));
     }
 

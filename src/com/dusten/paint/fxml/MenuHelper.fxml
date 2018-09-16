@@ -22,7 +22,7 @@
                   accelerator="Shortcut+Shift+R" />
 
         <MenuItem fx:id="undoMenu" text="Undo" onAction="#undoAction"
-                  accelerator="Shortcut+Z" disable="false" />
+                  accelerator="Shortcut+Z" disable="true" />
 
         <MenuItem fx:id="redoMenu" text="Redo" onAction="#redoAction"
                   accelerator="Shortcut+Shift+Z" disable="true" />
@@ -33,6 +33,9 @@
 
         <MenuItem fx:id="hideToolsMenu" text="Hide..." onAction="#hideToolbarAction"
                   accelerator="Shortcut+Shift+T" />
+
+        <MenuItem text="Settings..." onAction="#showToolSettingsAction"
+                  accelerator="Shortcut+Alt+S" />
     </Menu>
 
 </MenuBar>

@@ -5,7 +5,6 @@ import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
 import com.dusten.paint.popup.MessagePopup;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
@@ -45,14 +44,17 @@ public class PaintApp extends Application {
                 // Queries the user to save on close if they have not saved recently
                 ButtonType saveQuery = MessagePopup.showAsQueryAndWait("Save before closing?");
 
-                if(saveQuery.equals(ButtonType.CANCEL))
+                if(saveQuery.equals(ButtonType.CANCEL)) {
+
                     event.consume();
+                    return;
+                }
 
                 else if(saveQuery.equals(ButtonType.OK))
                     controller.getImageHelper().saveImage();
             }
             toolBar.close();
-            Platform.exit();
+            // Platform.exit();
         });
 
         controller.setMainStage(primaryStage);

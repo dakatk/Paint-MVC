@@ -2,10 +2,7 @@ package com.dusten.paint.components;
 
 import com.dusten.paint.controllers.ImageController;
 import com.dusten.paint.enums.ToolsEnum;
-import com.dusten.paint.operators.BucketOperator;
-import com.dusten.paint.operators.ImageOperator;
-import com.dusten.paint.operators.LineOperator;
-import com.dusten.paint.operators.PaintOperator;
+import com.dusten.paint.operators.*;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.canvas.Canvas;
@@ -15,7 +12,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
@@ -31,6 +27,7 @@ public class DrawableCanvas extends Canvas {
     public static final double DEFAULT_LINE_WEIGHT = 2.0;
 
     private ImageController imageController;
+    private ShapeRasterize shapeRasterize;
     private GraphicsContext context;
     private ToolsEnum toolType;
 
@@ -40,10 +37,6 @@ public class DrawableCanvas extends Canvas {
     private double fillTolerance;
     private double lineWeight;
 
-    private Rectangle tempRect;
-    private Circle tempElipse;
-    private Line tempLine;
-
     public DrawableCanvas() {
 
         this.fillTolerance = DEFAULT_FILL_TOLERANCE;
@@ -52,7 +45,7 @@ public class DrawableCanvas extends Canvas {
         this.editHistory = new ArrayList<>();
         this.editIndex = -1;
 
-        this.tempLine = new Line();
+        this.shapeRasterize = new ShapeRasterize();
         this.toolType = null;
 
         this.context = this.getGraphicsContext2D();
@@ -69,34 +62,64 @@ public class DrawableCanvas extends Canvas {
 
         this.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
 
-            if(this.toolType == null || !this.toolType.equals(ToolsEnum.LINE))
+            if(this.toolType == null)
                 event.consume();
-            else
-                this.moveLine(event.getX(), event.getY());
+
+            else if(this.toolType.equals(ToolsEnum.LINE)) {
+
+                this.redraw();
+                this.shapeRasterize.renderLine(this.context, this.lineWeight, event.getX(), event.getY());
+            }
+
+            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL)) {
+
+                this.redraw();
+                this.shapeRasterize.renderFillRectangle(this.context, event.getX(), event.getY());
+            }
+
+            else if(this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
+
+                this.redraw();
+                this.shapeRasterize.renderDrawRectangle(this.context, event.getX(), event.getY());
+            }
         });
 
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
 
-            if(this.toolType == null || !this.toolType.equals(ToolsEnum.LINE))
+            if(this.toolType == null)
                 event.consume();
-            else
-                this.setLine(event.getX(), event.getY());
+
+            else if(this.toolType.equals(ToolsEnum.LINE))
+                this.shapeRasterize.setLine(this.context.getStroke(), event.getX(), event.getY());
+
+            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL) || this.toolType.equals(ToolsEnum.RECTANGLE_DRAW))
+                this.shapeRasterize.setRectangle(this.context.getStroke(), event.getX(), event.getY());
+
         });
         
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
            
-            if(this.toolType == null || !this.toolType.equals(ToolsEnum.LINE))
+            if(this.toolType == null)
                 event.consume();
-            else
-                this.addEdit(new LineOperator(this.tempLine, this.lineWeight));
+
+            else if(this.toolType.equals(ToolsEnum.LINE)) {
+
+                Line line = this.shapeRasterize.getLine();
+                this.addEdit(new LineOperator(line, this.lineWeight));
+            }
+            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL) || this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
+
+                Rectangle rectangle = this.shapeRasterize.getRectangle();
+                this.addEdit(new RectangleOperator(rectangle, this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)));
+            }
         });
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
 
-            if(this.toolType == null || !this.toolType.equals(ToolsEnum.BUCKET))
+            if(this.toolType == null)
                 event.consume();
 
-            else {
+            else if(this.toolType.equals(ToolsEnum.BUCKET)) {
 
                 Paint fill = this.context.getStroke();
 
@@ -112,46 +135,9 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     * Move current line on screen to a new endX and endY based on the
-     * mouse position, then redraw
      *
-     * @param mouseX Current mouse pointer 'x' position on canvas
-     * @param mouseY Current mouse pointer 'y' position on canvas
+     * @param edit
      */
-    private void moveLine(double mouseX, double mouseY) {
-
-        this.tempLine.setEndX(mouseX);
-        this.tempLine.setEndY(mouseY);
-
-        this.redraw();
-
-        Paint currStroke = this.context.getStroke();
-
-        this.context.setStroke(this.tempLine.getStroke());
-        this.context.strokeLine(this.tempLine.getStartX(), this.tempLine.getStartY(),
-                this.tempLine.getEndX(), this.tempLine.getEndY());
-
-        this.context.setStroke(currStroke);
-    }
-
-    /**
-     * Sets the current line's initial position to be at the
-     * current mouse position
-     *
-     * @param mouseX Current mouse pointer 'x' position on canvas
-     * @param mouseY Current mouse pointer 'y' position on canvas
-     */
-    private void setLine(double mouseX, double mouseY) {
-
-        this.tempLine.setStartX(mouseX);
-        this.tempLine.setStartY(mouseY);
-
-        this.tempLine.setEndX(mouseX);
-        this.tempLine.setEndY(mouseY);
-
-        this.tempLine.setStroke(this.context.getStroke());
-    }
-    
     private void addEdit(PaintOperator edit) {
 
         this.editHistory.subList(this.editIndex + 1, this.editHistory.size()).clear();
@@ -163,19 +149,29 @@ public class DrawableCanvas extends Canvas {
         this.redraw();
     }
 
+    /**
+     *
+     */
     private void redraw() {
 
         this.context.clearRect(0.0, 0.0, this.getWidth(), this.getHeight());
         if(this.isUndoDisabled()) return;
 
+        double currWeight = this.context.getLineWidth();
         Paint currStroke = this.context.getStroke();
+        Paint currFill = this.context.getFill();
 
         for(int i = 0; i <= this.editIndex; i ++)
             this.editHistory.get(i).draw(this.context);
 
+        this.context.setLineWidth(currWeight);
         this.context.setStroke(currStroke);
+        this.context.setFill(currFill);
     }
 
+    /**
+     *
+     */
     public void undoEdit() {
 
         if(this.isUndoDisabled()) return;
@@ -186,6 +182,9 @@ public class DrawableCanvas extends Canvas {
         this.imageController.setSaved(false);
     }
 
+    /**
+     *
+     */
     public void redoEdit() {
 
         if(this.isRedoDisabled()) return;
@@ -236,7 +235,9 @@ public class DrawableCanvas extends Canvas {
         this.context.setStroke(color);
     }
 
-    public void setImageController(@NotNull ImageController imageController) { this.imageController = imageController; }
+    public void setImageController(@NotNull ImageController imageController) {
+        this.imageController = imageController;
+    }
 
     public boolean isUndoDisabled() {
         return this.editIndex < 0;

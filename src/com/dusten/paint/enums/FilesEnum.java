@@ -17,7 +17,9 @@ public enum FilesEnum {
     TOOLSETTINGS_FXML("ToolSettings.fxml"),
     // icon image files
     PAINTBUCKET_ICON("resources/PaintBucket.png"),
-    LINETOOL_ICON("resources/LineTool.png");
+    LINETOOL_ICON("resources/LineTool.png"),
+    RECTANGLEFILLTOOL_ICON("resources/RectangleFillTool.png"),
+    RECTANGLEDRAWTOOL_ICON("resources/RectangleDrawTool.png");
 
     private String url;
 
