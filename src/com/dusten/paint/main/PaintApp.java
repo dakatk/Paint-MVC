@@ -16,6 +16,7 @@ import javafx.stage.Stage;
  * The main class for this project, also doubles as the controller for
  * the main FXML file (specified as 'PaintApp.fxml')
  */
+// TODO clean up controller <-> model references
 public class PaintApp extends Application {
 
     public static final String TITLE = "Pain(t)";
@@ -41,20 +42,18 @@ public class PaintApp extends Application {
 
             if(controller.getImageHelper().hasNotSaved()) {
 
+                System.out.println("quitting");
+                // TODO why does this fire twice?
                 // Queries the user to save on close if they have not saved recently
                 ButtonType saveQuery = MessagePopup.showAsQueryAndWait("Save before closing?");
 
-                if(saveQuery.equals(ButtonType.CANCEL)) {
-
+                if(saveQuery.equals(ButtonType.CANCEL))
                     event.consume();
-                    return;
-                }
 
                 else if(saveQuery.equals(ButtonType.OK))
                     controller.getImageHelper().saveImage();
             }
-            toolBar.close();
-            // Platform.exit();
+            else toolBar.close();
         });
 
         controller.setMainStage(primaryStage);

@@ -72,14 +72,14 @@ class ShapeRasterize {
     }
 
     void renderFillRectangle(GraphicsContext context, double x, double y) {
-        this.renderRectangle(context, false, x, y);
+        this.renderRectangle(context, 1.0, false, x, y);
     }
 
-    void renderDrawRectangle(GraphicsContext context, double x, double y) {
-        this.renderRectangle(context, true, x, y);
+    void renderDrawRectangle(GraphicsContext context, double lineWeight, double x, double y) {
+        this.renderRectangle(context, lineWeight, true, x, y);
     }
 
-    private void renderRectangle(GraphicsContext context, boolean outline, double x, double y) {
+    private void renderRectangle(GraphicsContext context, double lineWeight, boolean outline, double x, double y) {
 
         this.tempRectangle.setWidth(x - this.tempRectangle.getX());
         this.tempRectangle.setHeight(y - this.tempRectangle.getY());
@@ -93,16 +93,27 @@ class ShapeRasterize {
         if(this.tempRectangle.getHeight() < 0.0)
             renderY += this.tempRectangle.getHeight();
 
-        Paint currFill = context.getFill();
+        if(outline) {
 
-        context.setFill(this.tempRectangle.getStroke());
+            double currWeight = context.getLineWidth();
+            Paint currStroke = context.getStroke();
 
-        if(outline)
+            context.setLineWidth(lineWeight);
+            context.setStroke(this.tempRectangle.getStroke());
             context.strokeRect(renderX, renderY, Math.abs(this.tempRectangle.getWidth()), Math.abs(this.tempRectangle.getHeight()));
-        else
+
+            context.setLineWidth(currWeight);
+            context.setStroke(currStroke);
+        }
+        else {
+
+            Paint currFill = context.getFill();
+
+            context.setFill(this.tempRectangle.getStroke());
             context.fillRect(renderX, renderY, Math.abs(this.tempRectangle.getWidth()), Math.abs(this.tempRectangle.getHeight()));
 
-        context.setFill(currFill);
+            context.setFill(currFill);
+        }
     }
 
     Line getLine() {

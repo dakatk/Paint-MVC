@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
  *
  * Controller for MenuHelper.fxml
  */
-// TODO line weight and bucket tolerance w/ sliders
 public class MenuController implements Initializable {
 
     @FXML private MenuItem saveMenu;
@@ -106,6 +105,7 @@ public class MenuController implements Initializable {
     @FXML
     private void undoAction() {
 
+        if(this.imageHelper == null) return;
         this.imageHelper.undoEdit();
 
         if(this.redoMenu.isDisable())
@@ -118,6 +118,7 @@ public class MenuController implements Initializable {
     @FXML
     private void redoAction() {
 
+        if(this.imageHelper == null) return;
         this.imageHelper.redoEdit();
 
         if(this.undoMenu.isDisable())
@@ -130,6 +131,7 @@ public class MenuController implements Initializable {
     @FXML
     private void showToolbarAction() {
 
+        if(this.toolBar == null) return;
         this.toolBar.showRelativeTo(this.mainStage);
 
         this.hideToolsMenu.setDisable(false);
@@ -142,6 +144,7 @@ public class MenuController implements Initializable {
     @FXML
     private void hideToolbarAction() {
 
+        if(this.toolBar == null) return;
         this.toolBar.hide();
 
         this.showToolsMenu.setDisable(false);
@@ -154,6 +157,7 @@ public class MenuController implements Initializable {
     @FXML
     private void showToolSettingsAction() {
 
+        if(this.toolBar == null) return;
         this.toolBar.showSettingsWindow();
     }
 
@@ -173,14 +177,14 @@ public class MenuController implements Initializable {
         });
     }
 
-    public void setMainStage(@NotNull Stage mainStage) {
-        this.mainStage = mainStage;
-    }
-
     public void setImageHelper(@NotNull ImageHelper imageHelper) {
 
         this.imageHelper = imageHelper;
         this.imageHelper.setSaveMenus(this.saveMenu, this.saveAsMenu);
         this.imageHelper.setHistoryMenus(this.undoMenu, this.redoMenu);
+    }
+
+    public void setMainStage(@NotNull Stage mainStage) {
+        this.mainStage = mainStage;
     }
 }

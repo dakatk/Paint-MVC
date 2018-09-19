@@ -1,5 +1,6 @@
 package com.dusten.paint.enums;
 
+import com.dusten.paint.components.CustomCursor;
 import javafx.scene.Cursor;
 
 /**
@@ -13,8 +14,7 @@ import javafx.scene.Cursor;
 public enum ToolsEnum {
 
     LINE(FilesEnum.LINETOOL_ICON, Cursor.CROSSHAIR, "Line Tool"),
-    // TODO image cursor
-    BUCKET(FilesEnum.PAINTBUCKET_ICON, Cursor.DEFAULT, "Paint Bucket Tool"),
+    BUCKET(FilesEnum.PAINTBUCKET_ICON, CustomCursor.BUCKET, "Paint Bucket Tool"),
     RECTANGLE_FILL(FilesEnum.RECTANGLEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Rectangle Tool"),
     RECTANGLE_DRAW(FilesEnum.RECTANGLEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Rectangle Tool");
 

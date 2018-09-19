@@ -15,11 +15,13 @@ public enum FilesEnum {
     RESIZEPOPUP_FXML("ResizePopup.fxml"),
     TOOLBAR_FXML("ToolBar.fxml"),
     TOOLSETTINGS_FXML("ToolSettings.fxml"),
-    // icon image files
+    // toolbar icon image files
     PAINTBUCKET_ICON("resources/PaintBucket.png"),
     LINETOOL_ICON("resources/LineTool.png"),
     RECTANGLEFILLTOOL_ICON("resources/RectangleFillTool.png"),
-    RECTANGLEDRAWTOOL_ICON("resources/RectangleDrawTool.png");
+    RECTANGLEDRAWTOOL_ICON("resources/RectangleDrawTool.png"),
+    // custom cursor image files
+    BUCKET_CURSOR("resources/cursors/PaintBucketCursor.png");
 
     private String url;
 

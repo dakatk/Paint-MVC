@@ -32,12 +32,8 @@ public class LineOperator implements PaintOperator {
     @Override
     public void draw(GraphicsContext context) {
 
-        double currWeight = context.getLineWidth();
-
         context.setLineWidth(this.lineWeight);
         context.setStroke(this.fill);
         context.strokeLine(this.x0, this.y0, this.x1, this.y1);
-
-        context.setLineWidth(currWeight);
     }
 }

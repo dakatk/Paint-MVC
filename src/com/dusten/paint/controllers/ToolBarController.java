@@ -116,6 +116,9 @@ public class ToolBarController implements Initializable {
     }
 
     public void setRectangleToolMode(@NotNull ToolsEnum toolType) {
+
         this.rectangleToolButton.setEnumToolType(toolType);
+        if(this.rectangleToolButton.isSelected())
+            this.canvas.setToolType(toolType);
     }
 }

@@ -166,10 +166,9 @@ public class ImageHelper extends StackPane {
             rawImage = SwingFXUtils.fromFXImage(baseImage, null);
             ImageIO.write(rawImage, this.formatName.toLowerCase(), this.opened);
 
-            this.updateSavedState(true);
+            this.controller.setSaved(true);
 
         } catch(Exception e) {
-            e.printStackTrace();
             MessagePopup.showAsError("Unable to write to file '" + this.opened.getName() + "'");
         }
     }
@@ -248,9 +247,12 @@ public class ImageHelper extends StackPane {
     }
 
     /**
+     * Set the MenuItem object references for the Save and Save-As menus. This is
+     * for the purpose of disabling/enabling these menus when the save status of
+     * the application is updated
      *
-     * @param saveMenu
-     * @param saveAsMenu
+     * @param saveMenu 'Save' MenuItem object
+     * @param saveAsMenu 'Save-As' MenuItem object
      */
     public void setSaveMenus(@NotNull MenuItem saveMenu, @NotNull MenuItem saveAsMenu) {
 
@@ -259,9 +261,12 @@ public class ImageHelper extends StackPane {
     }
 
     /**
+     * Set the MenuItem object references for the Undo and Redo menus. This is
+     * for the purpose of disabling/enabling these menus when the save status of
+     * the application is updated
      *
-     * @param undoMenu
-     * @param redoMenu
+     * @param undoMenu 'Undo' MenuItem object
+     * @param redoMenu 'Redo' MenuItem object
      */
     public void setHistoryMenus(@NotNull MenuItem undoMenu, @NotNull MenuItem redoMenu) {
 

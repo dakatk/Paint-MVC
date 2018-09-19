@@ -8,20 +8,25 @@ public class RectangleOperator implements PaintOperator {
 
     private Paint fill;
     private boolean outline;
+    private double lineWeight;
 
     private double width;
     private double height;
     private double x;
     private double y;
 
-    public RectangleOperator(Rectangle rectangle, boolean outline) {
+    public RectangleOperator(Rectangle rectangle, double lineWeight, boolean outline) {
 
         this.width = rectangle.getWidth();
         this.height = rectangle.getHeight();
+
         this.fill = rectangle.getStroke();
+
         this.x = rectangle.getX();
         this.y = rectangle.getY();
+
         this.outline = outline;
+        this.lineWeight = lineWeight;
 
         if(this.width < 0.0) {
 
@@ -41,11 +46,12 @@ public class RectangleOperator implements PaintOperator {
 
         if(this.outline) {
 
+            context.setLineWidth(this.lineWeight);
             context.setStroke(this.fill);
             context.strokeRect(this.x, this.y, this.width, this.height);
         }
         else {
-            
+
             context.setFill(this.fill);
             context.fillRect(this.x, this.y, this.width, this.height);
         }

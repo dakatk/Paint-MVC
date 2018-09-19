@@ -35,8 +35,10 @@ public class BucketOperator implements PaintOperator {
         context.clearRect(0.0, 0.0, this.canvasWidth, this.canvasHeight);
         context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight);
 
-        this.subroutine.setOnSucceeded(event ->
-                context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight)
-        );
+        this.subroutine.setOnSucceeded(event -> {
+
+            context.clearRect(0.0, 0.0, this.canvasWidth, this.canvasHeight);
+            context.drawImage(this.image, 0.0, 0.0, this.canvasWidth, this.canvasHeight);
+        });
     }
 }

@@ -80,7 +80,7 @@ public class DrawableCanvas extends Canvas {
             else if(this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
 
                 this.redraw();
-                this.shapeRasterize.renderDrawRectangle(this.context, event.getX(), event.getY());
+                this.shapeRasterize.renderDrawRectangle(this.context, this.lineWeight, event.getX(), event.getY());
             }
         });
 
@@ -98,6 +98,8 @@ public class DrawableCanvas extends Canvas {
         });
         
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+
+            this.setCursor(this.toolType.getCursor());
            
             if(this.toolType == null)
                 event.consume();
@@ -110,7 +112,7 @@ public class DrawableCanvas extends Canvas {
             else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL) || this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
 
                 Rectangle rectangle = this.shapeRasterize.getRectangle();
-                this.addEdit(new RectangleOperator(rectangle, this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)));
+                this.addEdit(new RectangleOperator(rectangle, this.lineWeight, this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)));
             }
         });
 
@@ -219,16 +221,18 @@ public class DrawableCanvas extends Canvas {
         this.addEdit(new ImageOperator(image, this.getWidth(), this.getHeight()));
     }
 
+    public void setToolType(@Nullable ToolsEnum toolType) {
+
+        this.toolType = toolType;
+        this.setCursor(this.toolType.getCursor());
+    }
+
     public void setLineWeight(double lineWeight) {
         this.lineWeight = lineWeight;
     }
 
     public void setFillTolerance(double fillTolerance) {
         this.fillTolerance = fillTolerance;
-    }
-
-    public void setToolType(@Nullable ToolsEnum toolType) {
-        this.toolType = toolType;
     }
 
     public void setColor(@NotNull Color color) {
