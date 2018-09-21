@@ -1,4 +1,4 @@
-package com.dusten.paint.components;
+package com.dusten.paint.components.rasterizers;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
@@ -6,15 +6,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-class ShapeRasterize {
+public class ShapeRasterize {
 
     private Rectangle tempRectangle;
     private Circle tempEllipse;
     private Line tempLine;
 
-    ShapeRasterize() {
+    public ShapeRasterize() {
 
         this.tempRectangle = new Rectangle();
+        this.tempEllipse = new Circle();
         this.tempLine = new Line();
     }
 
@@ -26,7 +27,7 @@ class ShapeRasterize {
      * @param x Current mouse pointer 'x' position on canvas
      * @param y Current mouse pointer 'y' position on canvas
      */
-    void setLine(Paint stroke, double x, double y) {
+    public void setLine(Paint stroke, double x, double y) {
 
         this.tempLine.setStartX(x);
         this.tempLine.setStartY(y);
@@ -43,7 +44,7 @@ class ShapeRasterize {
      * @param x
      * @param y
      */
-    void setEllipse(Paint stroke, double x, double y) {
+    public void setEllipse(Paint stroke, double x, double y) {
 
         this.tempEllipse.setCenterX(x);
         this.tempEllipse.setCenterY(y);
@@ -60,7 +61,7 @@ class ShapeRasterize {
      * @param x
      * @param y
      */
-    void setRectangle(Paint stroke, double x, double y) {
+    public void setRectangle(Paint stroke, double x, double y) {
 
         this.tempRectangle.setX(x);
         this.tempRectangle.setY(y);
@@ -79,7 +80,7 @@ class ShapeRasterize {
      * @param x Current mouse pointer 'x' position on canvas
      * @param y Current mouse pointer 'y' position on canvas
      */
-    void renderLine(GraphicsContext context, double lineWeight, double x, double y) {
+    public void renderLine(GraphicsContext context, double lineWeight, double x, double y) {
 
         this.tempLine.setEndX(x);
         this.tempLine.setEndY(y);
@@ -96,11 +97,11 @@ class ShapeRasterize {
         context.setStroke(currStroke);
     }
 
-    void renderFillEllipse(GraphicsContext context, double x, double y) {
+    public void renderFillEllipse(GraphicsContext context, double x, double y) {
         this.renderEllipse(context, null, x, y);
     }
 
-    void renderDrawEllipse(GraphicsContext context, double lineWeight, double x, double y) {
+    public void renderDrawEllipse(GraphicsContext context, double lineWeight, double x, double y) {
         this.renderEllipse(context, lineWeight, x, y);
     }
 
@@ -121,6 +122,8 @@ class ShapeRasterize {
             double currWeight = context.getLineWidth();
             Paint currStroke = context.getStroke();
 
+            context.setStroke(this.tempEllipse.getStroke());
+            context.setLineWidth(lineWeight);
             context.strokeOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
                     this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
 
@@ -131,6 +134,7 @@ class ShapeRasterize {
 
             Paint currFill = context.getFill();
 
+            context.setFill(this.tempEllipse.getStroke());
             context.fillOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
                     this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
 
@@ -144,7 +148,7 @@ class ShapeRasterize {
      * @param x
      * @param y
      */
-    void renderFillRectangle(GraphicsContext context, double x, double y) {
+    public void renderFillRectangle(GraphicsContext context, double x, double y) {
         this.renderRectangle(context, null, x, y);
     }
 
@@ -155,7 +159,7 @@ class ShapeRasterize {
      * @param x
      * @param y
      */
-    void renderDrawRectangle(GraphicsContext context, double lineWeight, double x, double y) {
+    public void renderDrawRectangle(GraphicsContext context, double lineWeight, double x, double y) {
         this.renderRectangle(context, lineWeight, x, y);
     }
 
@@ -204,15 +208,15 @@ class ShapeRasterize {
         }
     }
 
-    Line getLine() {
+    public Line getLine() {
         return this.tempLine;
     }
 
-    Circle getEllipse() {
+    public Circle getEllipse() {
         return this.tempEllipse;
     }
 
-    Rectangle getRectangle() {
+    public Rectangle getRectangle() {
         return this.tempRectangle;
     }
 }

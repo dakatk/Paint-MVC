@@ -103,6 +103,16 @@ public class MenuController implements Initializable {
      *
      */
     @FXML
+    private void clearCanvasAction() {
+
+        if(this.imageHelper == null) return;
+        this.imageHelper.clearCanvas();
+    }
+
+    /**
+     *
+     */
+    @FXML
     private void undoAction() {
 
         if(this.imageHelper == null) return;

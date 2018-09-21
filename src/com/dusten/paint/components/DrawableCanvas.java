@@ -1,5 +1,7 @@
 package com.dusten.paint.components;
 
+import com.dusten.paint.components.rasterizers.FreeDrawRasterize;
+import com.dusten.paint.components.rasterizers.ShapeRasterize;
 import com.dusten.paint.controllers.ImageController;
 import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.operators.*;
@@ -24,8 +26,10 @@ public class DrawableCanvas extends Canvas {
     public static final double DEFAULT_FILL_TOLERANCE = 0.1;
     public static final double DEFAULT_LINE_WEIGHT = 2.0;
 
-    private ImageController imageController;
+    private FreeDrawRasterize freeDrawRasterize;
     private ShapeRasterize shapeRasterize;
+
+    private ImageController imageController;
     private GraphicsContext context;
     private ToolsEnum toolType;
 
@@ -43,6 +47,7 @@ public class DrawableCanvas extends Canvas {
         this.editHistory = new ArrayList<>();
         this.editIndex = -1;
 
+        this.freeDrawRasterize = new FreeDrawRasterize();
         this.shapeRasterize = new ShapeRasterize();
         this.toolType = null;
 
@@ -70,24 +75,30 @@ public class DrawableCanvas extends Canvas {
                     this.shapeRasterize.renderLine(this.context, this.lineWeight, event.getX(), event.getY());
                     break;
 
-                case RECTANGLE_FILL: // ordinal 2
+                case RECTANGLE_FILL: // ordinal 4
                     this.redraw();
                     this.shapeRasterize.renderFillRectangle(this.context, event.getX(), event.getY());
                     break;
 
-                case RECTANGLE_DRAW: // ordinal 3
+                case RECTANGLE_DRAW: // ordinal 5
                     this.redraw();
                     this.shapeRasterize.renderDrawRectangle(this.context, this.lineWeight, event.getX(), event.getY());
                     break;
 
-                case ELLIPSE_FILL: // ordinal 4
+                case ELLIPSE_FILL: // ordinal 6
                     this.redraw();
                     this.shapeRasterize.renderFillEllipse(this.context, event.getX(), event.getY());
                     break;
 
-                case ELLIPSE_DRAW: // ordinal 5
+                case ELLIPSE_DRAW: // ordinal 7
                     this.redraw();
                     this.shapeRasterize.renderDrawEllipse(this.context, this.lineWeight, event.getX(), event.getY());
+                    break;
+
+                case PAINTBRUSH: // ordinal 3
+                case PENCIL: // ordinal 2
+                    this.redraw();
+                    this.freeDrawRasterize.drawNextStroke(event.getX(), event.getY());
                     break;
 
                 default:
@@ -106,17 +117,24 @@ public class DrawableCanvas extends Canvas {
                     this.shapeRasterize.setLine(this.context.getStroke(), event.getX(), event.getY());
                     break;
 
-                case RECTANGLE_DRAW: // ordinal 3
-                case RECTANGLE_FILL: // ordinal 2
+                case RECTANGLE_DRAW: // ordinal 5
+                case RECTANGLE_FILL: // ordinal 4
                     this.shapeRasterize.setRectangle(this.context.getStroke(), event.getX(), event.getY());
                     break;
 
-                case ELLIPSE_DRAW: // ordinal 5
-                case ELLIPSE_FILL: // ordinal 4
+                case ELLIPSE_DRAW: // ordinal 7
+                case ELLIPSE_FILL: // ordinal 6
                     this.shapeRasterize.setEllipse(this.context.getStroke(), event.getX(), event.getY());
                     break;
 
+                case PENCIL: // ordinal 2
+                case PAINTBRUSH: // ordinal 3
+                    this.freeDrawRasterize.resetStroke(this.context, this.context.getStroke(),
+                            this.toolType.equals(ToolsEnum.PAINTBRUSH), this.lineWeight, event.getX(), event.getY());
+                    break;
+
                 default:
+                    event.consume();
                     break;
             }
         });
@@ -134,30 +152,37 @@ public class DrawableCanvas extends Canvas {
                     this.addEdit(new LineOperator(this.shapeRasterize.getLine(), this.lineWeight));
                     break;
 
-                case RECTANGLE_FILL: // ordinal 2
+                case RECTANGLE_FILL: // ordinal 4
                     this.addEdit(new RectangleOperator(this.shapeRasterize.getRectangle(), null));
                     break;
 
-                case RECTANGLE_DRAW: // ordinal 3
+                case RECTANGLE_DRAW: // ordinal 5
                     this.addEdit(new RectangleOperator(this.shapeRasterize.getRectangle(), this.lineWeight));
                     break;
 
-                case ELLIPSE_FILL:
+                case ELLIPSE_FILL: // ordinal 6
                     this.addEdit(new EllipseOperator(this.shapeRasterize.getEllipse(), null));
                     break;
 
-                case ELLIPSE_DRAW:
+                case ELLIPSE_DRAW: // ordinal 7
                     this.addEdit(new EllipseOperator(this.shapeRasterize.getEllipse(), this.lineWeight));
                     break;
 
+                case PAINTBRUSH: // ordinal 3
+                case PENCIL: // ordinal 2
+                    this.addEdit(new FreeDrawOperator(this.context.getStroke(), this.freeDrawRasterize.getDrawPoints(),
+                            this.lineWeight, this.freeDrawRasterize.isBrush(), this.getWidth(), this.getHeight()));
+                    break;
+
                 default:
+                    event.consume();
                     break;
             }
         });
 
-        this.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
+        this.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
 
-            if(this.toolType == null || this.toolType == ToolsEnum.BUCKET)
+            if(this.toolType == null || this.toolType != ToolsEnum.BUCKET)
                 event.consume();
 
             else {
@@ -263,7 +288,17 @@ public class DrawableCanvas extends Canvas {
     public void setToolType(@Nullable ToolsEnum toolType) {
 
         this.toolType = toolType;
-        this.setCursor(this.toolType.getCursor());
+        if(this.toolType != null)
+            this.setCursor(this.toolType.getCursor());
+    }
+
+    public void clearAll() {
+
+        // Checks for previous operand to have been 'clear' so as to avoid spam
+        if(editIndex >= 0 && this.editHistory.get(editIndex) instanceof ClearOperator)
+            return;
+
+        this.addEdit(new ClearOperator(Color.WHITE, this.getWidth(), this.getHeight()));
     }
 
     public void setLineWeight(double lineWeight) {

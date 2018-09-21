@@ -1,10 +1,10 @@
 package com.dusten.paint.operators;
 
 import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import jdk.internal.jline.internal.Nullable;
 
 public class RectangleOperator implements PaintOperator {
 

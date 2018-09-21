@@ -21,6 +21,9 @@
         <MenuItem text="Canvas Size..." onAction="#resizeAction"
                   accelerator="Shortcut+Shift+R" />
 
+        <MenuItem text="Clear" onAction="#clearCanvasAction"
+                  accelerator="Shortcut+W" />
+
         <MenuItem fx:id="undoMenu" text="Undo" onAction="#undoAction"
                   accelerator="Shortcut+Z" disable="true" />
 

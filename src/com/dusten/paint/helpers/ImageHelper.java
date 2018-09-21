@@ -274,6 +274,10 @@ public class ImageHelper extends StackPane {
         this.redoMenu = redoMenu;
     }
 
+    public void clearCanvas() {
+        this.controller.getCanvas().clearAll();
+    }
+
     public void undoEdit() {
         this.controller.getCanvas().undoEdit();
     }
@@ -297,4 +301,5 @@ public class ImageHelper extends StackPane {
     public DrawableCanvas getCanvas() {
         return this.controller.getCanvas();
     }
+
 }

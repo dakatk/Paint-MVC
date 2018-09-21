@@ -32,6 +32,12 @@
         </VBox.margin>
     </ImageButton>
 
+    <ImageButton fx:id="drawToolButton" prefHeight="50" prefWidth="50" toolType="PENCIL">
+        <VBox.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>
+        </VBox.margin>
+    </ImageButton>
+
     <ImageButton fx:id="lineToolButton" prefHeight="50" prefWidth="50" toolType="LINE">
         <VBox.margin>
             <Insets bottom="5.0" left="10.0" right="10.0" top="5.0"/>

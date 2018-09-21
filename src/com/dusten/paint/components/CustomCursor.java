@@ -4,16 +4,35 @@ import com.dusten.paint.enums.FilesEnum;
 import javafx.scene.ImageCursor;
 import javafx.scene.image.Image;
 
-// TODO image corruption
+import java.io.InputStream;
+
+// TODO fix image corruption
 public class CustomCursor {
 
-    public static final ImageCursor BUCKET = new CustomCursor(FilesEnum.BUCKET_CURSOR).imageCursor;
+    public static final ImageCursor BUCKET = new CustomCursor(FilesEnum.BUCKET_CURSOR, 1, 1).getCursor();
+    public static final ImageCursor PENCIL = new CustomCursor(FilesEnum.PENCIL_CURSOR, 0, 1).getCursor();
+    public static final ImageCursor BRUSH = new CustomCursor(FilesEnum.PAINTBRUSH_CURSOR, 0, 1).getCursor();
 
-    private ImageCursor imageCursor;
+    private InputStream fileStream;
+    private double u;
+    private double v;
 
-    private CustomCursor(FilesEnum url) {
+    /**
+     *
+     * @param url Cursor image URL
+     * @param u Coordinate for the x hotspot of the cursor relative to the image size (0.0-1.0)
+     * @param v Coordinate for the y hotspot of the cursor relative to the image size (0.0-1.0)
+     */
+    private CustomCursor(FilesEnum url, double u, double v) {
 
-        Image image = new Image(CustomCursor.class.getResourceAsStream(url.toString()));
-        this.imageCursor = new ImageCursor(image, image.getWidth(), image.getHeight());
+        this.fileStream = CustomCursor.class.getResourceAsStream(url.toString());
+        this.u = u;
+        this.v = v;
+    }
+
+    private ImageCursor getCursor() {
+
+        Image image = new Image(this.fileStream);
+        return new ImageCursor(image, image.getWidth() * this.u, image.getHeight() * this.v);
     }
 }

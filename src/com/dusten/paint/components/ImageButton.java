@@ -18,9 +18,14 @@ public class ImageButton extends ToggleButton {
     private ToolsEnum enumToolType;
 
     public ImageButton(@NamedArg("toolType") String toolType) {
-        this.setEnumToolType(ToolsEnum.valueOf(toolType));
+        this.setEnumToolType(ToolsEnum.valueOf(toolType), null);
     }
 
+    /**
+     *
+     * @param url
+     * @return
+     */
     private ImageView createGraphic(String url) {
 
         Image baseImage = new Image(getClass().getResourceAsStream(url));
@@ -34,9 +39,17 @@ public class ImageButton extends ToggleButton {
         return graphic;
     }
 
-    public void setEnumToolType(ToolsEnum enumToolType) {
+    /**
+     *
+     * @param enumToolType
+     * @param canvas
+     */
+    public void setEnumToolType(ToolsEnum enumToolType, DrawableCanvas canvas) {
 
         this.enumToolType = enumToolType;
+
+        if(this.isSelected() && canvas != null)
+            canvas.setToolType(this.enumToolType);
 
         this.setGraphic(this.createGraphic(this.enumToolType.getIconURL()));
         this.setTooltip(new Tooltip(this.enumToolType.getTooltip()));

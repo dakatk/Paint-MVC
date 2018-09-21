@@ -42,18 +42,24 @@ public class PaintApp extends Application {
 
             if(controller.getImageHelper().hasNotSaved()) {
 
-                System.out.println("quitting");
-                // TODO why does this fire twice?
                 // Queries the user to save on close if they have not saved recently
                 ButtonType saveQuery = MessagePopup.showAsQueryAndWait("Save before closing?");
 
                 if(saveQuery.equals(ButtonType.CANCEL))
                     event.consume();
+                else {
 
-                else if(saveQuery.equals(ButtonType.OK))
-                    controller.getImageHelper().saveImage();
+                    if(saveQuery.equals(ButtonType.OK))
+                        controller.getImageHelper().saveImage();
+
+                    toolBar.close();
+                    toolBar.closeSettingsWindow();
+                }
+            } else {
+
+                toolBar.close();
+                toolBar.closeSettingsWindow();
             }
-            else toolBar.close();
         });
 
         controller.setMainStage(primaryStage);

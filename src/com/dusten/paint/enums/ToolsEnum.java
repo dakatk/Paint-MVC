@@ -15,6 +15,8 @@ public enum ToolsEnum {
 
     LINE(FilesEnum.LINETOOL_ICON, Cursor.CROSSHAIR, "Line Tool"),
     BUCKET(FilesEnum.PAINTBUCKET_ICON, CustomCursor.BUCKET, "Paint Bucket Tool"),
+    PENCIL(FilesEnum.PENCILTOOL_ICON, CustomCursor.PENCIL, "Pencil Tool"),
+    PAINTBRUSH(FilesEnum.PAINTBRUSHTOOL_ICON, CustomCursor.BRUSH, "Paintbrush Tool"),
     RECTANGLE_FILL(FilesEnum.RECTANGLEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Rectangle Tool"),
     RECTANGLE_DRAW(FilesEnum.RECTANGLEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Rectangle Tool"),
     ELLIPSE_FILL(FilesEnum.ELLIPSEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Ellipse Tool"),

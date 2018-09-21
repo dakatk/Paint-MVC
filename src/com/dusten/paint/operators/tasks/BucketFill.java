@@ -1,4 +1,4 @@
-package com.dusten.paint.operators;
+package com.dusten.paint.operators.tasks;
 
 import javafx.concurrent.Task;
 import javafx.scene.image.Image;
@@ -14,19 +14,25 @@ import java.util.Stack;
 /**
  * @author Dusten Knull
  *
- *
+ * Subroutine code for filling a specified area of the canvas by recursively matching and replacing
+ * pixels based on the color pixel the user initially clicked on. The actual fill routine should
+ * be run in a separate thread, and is set up to read pixels from the previous canvas image and
+ * write pixels to a new blank image to be overlayed when the canvas is redrawn
  */
-class BucketFill extends Task<Void> {
+public class BucketFill extends Task<Void> {
 
-    private WritableImage canvasImage;
+    private WritableImage resultImage;
+    private Image canvasImage;
+
     private Point clickedPoint;
     private Color fillColor;
 
     private double epsilon;
 
-    BucketFill(WritableImage canvasImage, Paint fillColor, double epsilon, double mouseX, double mouseY) {
+    public BucketFill(WritableImage resultImage, Image canvasImage, Paint fillColor, double epsilon, double mouseX, double mouseY) {
 
         this.epsilon = epsilon;
+        this.resultImage = resultImage;
         this.canvasImage = canvasImage;
 
         this.fillColor = (Color)fillColor;
@@ -38,8 +44,10 @@ class BucketFill extends Task<Void> {
 
         Stack<Point> stack = new Stack<>();
 
+        // Read from the old image...
         PixelReader pixelReader = this.canvasImage.getPixelReader();
-        PixelWriter pixelWriter = this.canvasImage.getPixelWriter();
+        // and write to the new one
+        PixelWriter pixelWriter = this.resultImage.getPixelWriter();
 
         int clickX = (int)this.clickedPoint.getX();
         int clickY = (int)this.clickedPoint.getY();
@@ -57,9 +65,12 @@ class BucketFill extends Task<Void> {
             int pixelX = (int)pixel.getX();
             int pixelY = (int)pixel.getY();
 
-            Color pixelColor = pixelReader.getColor(pixelX, pixelY);
-            if(this.isAlreadyFilled(pixelColor, targetColor))
-                continue;
+            Color readColor = pixelReader.getColor(pixelX, pixelY);
+            Color writtenColor = this.resultImage.getPixelReader().getColor(pixelX, pixelY);
+
+            // Check fill status for both source and target images
+            if(this.isAlreadyFilled(readColor, targetColor) ||
+                    this.isAlreadyFilled(writtenColor, targetColor)) continue;
 
             pixelWriter.setColor(pixelX, pixelY, this.fillColor);
 
@@ -105,7 +116,8 @@ class BucketFill extends Task<Void> {
      * @return
      */
     private boolean isAlreadyFilled(Color readColor, Color colorToFill) {
-        return !this.withinTolerance(readColor, colorToFill);
+        return !this.withinTolerance(readColor, colorToFill) &&
+                this.withinTolerance(readColor.getOpacity(), colorToFill.getOpacity());
     }
 
     /**

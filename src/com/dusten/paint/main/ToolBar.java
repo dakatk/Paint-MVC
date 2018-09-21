@@ -23,9 +23,11 @@ public class ToolBar extends PopupWindow<ToolBarController> {
         super(null, FilesEnum.TOOLBAR_FXML);
 
         this.controller.setParent(this);
-
         this.setShowOffset(-70.0, 0.0);
-        this.setOnCloseRequest(event -> this.controller.closeSettingsWindow());
+    }
+
+    void closeSettingsWindow() {
+        this.controller.closeSettingsWindow();
     }
 
     public void showSettingsWindow() {
@@ -42,5 +44,9 @@ public class ToolBar extends PopupWindow<ToolBarController> {
 
     public void setEllipseToolMode(@NotNull ToolsEnum toolType) {
         this.controller.setEllipseToolMode(toolType);
+    }
+
+    public void setDrawToolMode(@NotNull ToolsEnum toolType) {
+        this.controller.setDrawToolMode(toolType);
     }
 }
