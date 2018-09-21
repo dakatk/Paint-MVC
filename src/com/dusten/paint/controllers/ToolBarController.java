@@ -26,6 +26,7 @@ public class ToolBarController implements Initializable {
     @FXML private ImageButton paintBucketButton;
     @FXML private ImageButton lineToolButton;
     @FXML private ImageButton rectangleToolButton;
+    @FXML private ImageButton ellipseToolButton;
     @FXML private ColorPicker colorPicker;
 
     private ToolSettingsPopup toolSettings;
@@ -60,6 +61,7 @@ public class ToolBarController implements Initializable {
         this.paintBucketButton.setToggleGroup(buttonGroup);
         this.lineToolButton.setToggleGroup(buttonGroup);
         this.rectangleToolButton.setToggleGroup(buttonGroup);
+        this.ellipseToolButton.setToggleGroup(buttonGroup);
     }
 
     /**
@@ -119,6 +121,13 @@ public class ToolBarController implements Initializable {
 
         this.rectangleToolButton.setEnumToolType(toolType);
         if(this.rectangleToolButton.isSelected())
+            this.canvas.setToolType(toolType);
+    }
+
+    public void setEllipseToolMode(@NotNull ToolsEnum toolType) {
+
+        this.ellipseToolButton.setEnumToolType(toolType);
+        if(this.ellipseToolButton.isSelected())
             this.canvas.setToolType(toolType);
     }
 }

@@ -12,8 +12,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,22 +63,35 @@ public class DrawableCanvas extends Canvas {
             if(this.toolType == null)
                 event.consume();
 
-            else if(this.toolType.equals(ToolsEnum.LINE)) {
+            switch(this.toolType) {
 
-                this.redraw();
-                this.shapeRasterize.renderLine(this.context, this.lineWeight, event.getX(), event.getY());
-            }
+                case LINE: // ordinal 0
+                    this.redraw();
+                    this.shapeRasterize.renderLine(this.context, this.lineWeight, event.getX(), event.getY());
+                    break;
 
-            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL)) {
+                case RECTANGLE_FILL: // ordinal 2
+                    this.redraw();
+                    this.shapeRasterize.renderFillRectangle(this.context, event.getX(), event.getY());
+                    break;
 
-                this.redraw();
-                this.shapeRasterize.renderFillRectangle(this.context, event.getX(), event.getY());
-            }
+                case RECTANGLE_DRAW: // ordinal 3
+                    this.redraw();
+                    this.shapeRasterize.renderDrawRectangle(this.context, this.lineWeight, event.getX(), event.getY());
+                    break;
 
-            else if(this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
+                case ELLIPSE_FILL: // ordinal 4
+                    this.redraw();
+                    this.shapeRasterize.renderFillEllipse(this.context, event.getX(), event.getY());
+                    break;
 
-                this.redraw();
-                this.shapeRasterize.renderDrawRectangle(this.context, this.lineWeight, event.getX(), event.getY());
+                case ELLIPSE_DRAW: // ordinal 5
+                    this.redraw();
+                    this.shapeRasterize.renderDrawEllipse(this.context, this.lineWeight, event.getX(), event.getY());
+                    break;
+
+                default:
+                    break;
             }
         });
 
@@ -89,39 +100,67 @@ public class DrawableCanvas extends Canvas {
             if(this.toolType == null)
                 event.consume();
 
-            else if(this.toolType.equals(ToolsEnum.LINE))
-                this.shapeRasterize.setLine(this.context.getStroke(), event.getX(), event.getY());
+            switch(this.toolType) {
 
-            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL) || this.toolType.equals(ToolsEnum.RECTANGLE_DRAW))
-                this.shapeRasterize.setRectangle(this.context.getStroke(), event.getX(), event.getY());
+                case LINE: // ordinal 0
+                    this.shapeRasterize.setLine(this.context.getStroke(), event.getX(), event.getY());
+                    break;
 
+                case RECTANGLE_DRAW: // ordinal 3
+                case RECTANGLE_FILL: // ordinal 2
+                    this.shapeRasterize.setRectangle(this.context.getStroke(), event.getX(), event.getY());
+                    break;
+
+                case ELLIPSE_DRAW: // ordinal 5
+                case ELLIPSE_FILL: // ordinal 4
+                    this.shapeRasterize.setEllipse(this.context.getStroke(), event.getX(), event.getY());
+                    break;
+
+                default:
+                    break;
+            }
         });
         
         this.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
 
-            this.setCursor(this.toolType.getCursor());
-           
             if(this.toolType == null)
                 event.consume();
 
-            else if(this.toolType.equals(ToolsEnum.LINE)) {
+            this.setCursor(this.toolType.getCursor());
 
-                Line line = this.shapeRasterize.getLine();
-                this.addEdit(new LineOperator(line, this.lineWeight));
-            }
-            else if(this.toolType.equals(ToolsEnum.RECTANGLE_FILL) || this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)) {
+            switch(this.toolType) {
 
-                Rectangle rectangle = this.shapeRasterize.getRectangle();
-                this.addEdit(new RectangleOperator(rectangle, this.lineWeight, this.toolType.equals(ToolsEnum.RECTANGLE_DRAW)));
+                case LINE: // ordinal 0
+                    this.addEdit(new LineOperator(this.shapeRasterize.getLine(), this.lineWeight));
+                    break;
+
+                case RECTANGLE_FILL: // ordinal 2
+                    this.addEdit(new RectangleOperator(this.shapeRasterize.getRectangle(), null));
+                    break;
+
+                case RECTANGLE_DRAW: // ordinal 3
+                    this.addEdit(new RectangleOperator(this.shapeRasterize.getRectangle(), this.lineWeight));
+                    break;
+
+                case ELLIPSE_FILL:
+                    this.addEdit(new EllipseOperator(this.shapeRasterize.getEllipse(), null));
+                    break;
+
+                case ELLIPSE_DRAW:
+                    this.addEdit(new EllipseOperator(this.shapeRasterize.getEllipse(), this.lineWeight));
+                    break;
+
+                default:
+                    break;
             }
         });
 
         this.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
 
-            if(this.toolType == null)
+            if(this.toolType == null || this.toolType == ToolsEnum.BUCKET)
                 event.consume();
 
-            else if(this.toolType.equals(ToolsEnum.BUCKET)) {
+            else {
 
                 Paint fill = this.context.getStroke();
 

@@ -2,12 +2,14 @@ package com.dusten.paint.components;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
 class ShapeRasterize {
 
     private Rectangle tempRectangle;
+    private Circle tempEllipse;
     private Line tempLine;
 
     ShapeRasterize() {
@@ -35,6 +37,29 @@ class ShapeRasterize {
         this.tempLine.setStroke(stroke);
     }
 
+    /**
+     *
+     * @param stroke
+     * @param x
+     * @param y
+     */
+    void setEllipse(Paint stroke, double x, double y) {
+
+        this.tempEllipse.setCenterX(x);
+        this.tempEllipse.setCenterY(y);
+
+        this.tempEllipse.setScaleX(0.5);
+        this.tempEllipse.setScaleY(0.5);
+
+        this.tempEllipse.setStroke(stroke);
+    }
+
+    /**
+     *
+     * @param stroke
+     * @param x
+     * @param y
+     */
     void setRectangle(Paint stroke, double x, double y) {
 
         this.tempRectangle.setX(x);
@@ -71,15 +96,78 @@ class ShapeRasterize {
         context.setStroke(currStroke);
     }
 
+    void renderFillEllipse(GraphicsContext context, double x, double y) {
+        this.renderEllipse(context, null, x, y);
+    }
+
+    void renderDrawEllipse(GraphicsContext context, double lineWeight, double x, double y) {
+        this.renderEllipse(context, lineWeight, x, y);
+    }
+
+    /**
+     *
+     * @param context
+     * @param lineWeight
+     * @param x
+     * @param y
+     */
+    private void renderEllipse(GraphicsContext context, Double lineWeight, double x, double y) {
+
+        this.tempEllipse.setScaleX(Math.abs(x - this.tempEllipse.getCenterX()));
+        this.tempEllipse.setScaleY(Math.abs(y - this.tempEllipse.getCenterY()));
+
+        if(lineWeight != null) {
+
+            double currWeight = context.getLineWidth();
+            Paint currStroke = context.getStroke();
+
+            context.strokeOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
+                    this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
+
+            context.setLineWidth(currWeight);
+            context.setFill(currStroke);
+
+        } else {
+
+            Paint currFill = context.getFill();
+
+            context.fillOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
+                    this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
+
+            context.setFill(currFill);
+        }
+    }
+
+    /**
+     *
+     * @param context
+     * @param x
+     * @param y
+     */
     void renderFillRectangle(GraphicsContext context, double x, double y) {
-        this.renderRectangle(context, 1.0, false, x, y);
+        this.renderRectangle(context, null, x, y);
     }
 
+    /**
+     *
+     * @param context
+     * @param lineWeight
+     * @param x
+     * @param y
+     */
     void renderDrawRectangle(GraphicsContext context, double lineWeight, double x, double y) {
-        this.renderRectangle(context, lineWeight, true, x, y);
+        this.renderRectangle(context, lineWeight, x, y);
     }
 
-    private void renderRectangle(GraphicsContext context, double lineWeight, boolean outline, double x, double y) {
+    /**
+     * Generic render function for filling or drawing a rectangle
+     *
+     * @param context
+     * @param lineWeight
+     * @param x
+     * @param y
+     */
+    private void renderRectangle(GraphicsContext context, Double lineWeight, double x, double y) {
 
         this.tempRectangle.setWidth(x - this.tempRectangle.getX());
         this.tempRectangle.setHeight(y - this.tempRectangle.getY());
@@ -93,7 +181,7 @@ class ShapeRasterize {
         if(this.tempRectangle.getHeight() < 0.0)
             renderY += this.tempRectangle.getHeight();
 
-        if(outline) {
+        if(lineWeight != null) {
 
             double currWeight = context.getLineWidth();
             Paint currStroke = context.getStroke();
@@ -118,6 +206,10 @@ class ShapeRasterize {
 
     Line getLine() {
         return this.tempLine;
+    }
+
+    Circle getEllipse() {
+        return this.tempEllipse;
     }
 
     Rectangle getRectangle() {

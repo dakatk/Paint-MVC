@@ -16,6 +16,8 @@ public class ToolSettingsController implements Initializable {
 
     @FXML private ImageButton rectangleFillMode;
     @FXML private ImageButton rectangleDrawMode;
+    @FXML private ImageButton ellipseFillMode;
+    @FXML private ImageButton ellipseDrawMode;
     @FXML private Slider fillTolerance;
     @FXML private Slider lineWeight;
 
@@ -51,6 +53,18 @@ public class ToolSettingsController implements Initializable {
 
         this.rectangleFillMode.setToggleGroup(rectangleModes);
         this.rectangleDrawMode.setToggleGroup(rectangleModes);
+
+        ToggleGroup ellipseModes = new ToggleGroup();
+        ellipseModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            ImageButton selectedMode = (ImageButton)ellipseModes.getSelectedToggle();
+
+            if(this.toolBar != null)
+                this.toolBar.setEllipseToolMode(selectedMode.getEnumToolType());
+        });
+
+        this.ellipseFillMode.setToggleGroup(ellipseModes);
+        this.ellipseDrawMode.setToggleGroup(ellipseModes);
     }
 
     public void setToolBar(@NotNull ToolBar toolBar) {

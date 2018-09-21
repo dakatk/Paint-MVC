@@ -1,32 +1,31 @@
 package com.dusten.paint.operators;
 
+import com.sun.istack.internal.NotNull;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import jdk.internal.jline.internal.Nullable;
 
 public class RectangleOperator implements PaintOperator {
 
-    private Paint fill;
-    private boolean outline;
-    private double lineWeight;
+    private Double lineWeight;
+    private Paint paint;
 
     private double width;
     private double height;
     private double x;
     private double y;
 
-    public RectangleOperator(Rectangle rectangle, double lineWeight, boolean outline) {
+    public RectangleOperator(@NotNull Rectangle rectangle, @Nullable Double lineWeight) {
+
+        this.paint = rectangle.getStroke();
+        this.lineWeight = lineWeight;
 
         this.width = rectangle.getWidth();
         this.height = rectangle.getHeight();
 
-        this.fill = rectangle.getStroke();
-
         this.x = rectangle.getX();
         this.y = rectangle.getY();
-
-        this.outline = outline;
-        this.lineWeight = lineWeight;
 
         if(this.width < 0.0) {
 
@@ -44,15 +43,15 @@ public class RectangleOperator implements PaintOperator {
     @Override
     public void draw(GraphicsContext context) {
 
-        if(this.outline) {
+        if(this.lineWeight != null) {
 
+            context.setStroke(this.paint);
             context.setLineWidth(this.lineWeight);
-            context.setStroke(this.fill);
             context.strokeRect(this.x, this.y, this.width, this.height);
         }
         else {
 
-            context.setFill(this.fill);
+            context.setFill(this.paint);
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     }

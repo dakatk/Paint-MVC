@@ -28,15 +28,19 @@ public class ToolBar extends PopupWindow<ToolBarController> {
         this.setOnCloseRequest(event -> this.controller.closeSettingsWindow());
     }
 
-    public void setRectangleToolMode(ToolsEnum toolType) {
-        this.controller.setRectangleToolMode(toolType);
-    }
-
     public void showSettingsWindow() {
         this.controller.showSettingsAction();
     }
 
     public void setCanvas(@NotNull DrawableCanvas canvas) {
         this.controller.setCanvas(canvas);
+    }
+
+    public void setRectangleToolMode(@NotNull ToolsEnum toolType) {
+        this.controller.setRectangleToolMode(toolType);
+    }
+
+    public void setEllipseToolMode(@NotNull ToolsEnum toolType) {
+        this.controller.setEllipseToolMode(toolType);
     }
 }

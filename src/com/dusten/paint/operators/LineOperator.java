@@ -12,7 +12,7 @@ import javafx.scene.shape.Line;
 public class LineOperator implements PaintOperator {
 
     private double lineWeight;
-    private Paint fill;
+    private Paint paint;
 
     private double x0;
     private double y0;
@@ -22,9 +22,11 @@ public class LineOperator implements PaintOperator {
     public LineOperator(Line line, double lineWeight) {
 
         this.lineWeight = lineWeight;
-        this.fill = line.getStroke();
+        this.paint = line.getStroke();
+
         this.x0 = line.getStartX();
         this.y0 = line.getStartY();
+
         this.x1 = line.getEndX();
         this.y1 = line.getEndY();
     }
@@ -32,8 +34,8 @@ public class LineOperator implements PaintOperator {
     @Override
     public void draw(GraphicsContext context) {
 
+        context.setStroke(this.paint);
         context.setLineWidth(this.lineWeight);
-        context.setStroke(this.fill);
         context.strokeLine(this.x0, this.y0, this.x1, this.y1);
     }
 }
