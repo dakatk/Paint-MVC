@@ -2,7 +2,7 @@ package com.dusten.paint.controllers;
 
 import com.dusten.paint.helpers.ImageHelper;
 import com.dusten.paint.helpers.MenuHelper;
-import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,7 +37,7 @@ public class PaintController implements Initializable {
         this.imageHelper.setMainStage(mainStage);
     }
 
-    public void setToolBar(@NotNull ToolBar toolBar) {
+    public void setToolBar(@NotNull ToolBarPopup toolBar) {
 
         this.menuHelper.setToolBar(toolBar);
         toolBar.setCanvas(this.imageHelper.getCanvas());

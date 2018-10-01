@@ -24,6 +24,8 @@ public enum FilesEnum {
     RECTANGLEDRAWTOOL_ICON("resources/RectangleDrawTool.png"),
     ELLIPSEFILLTOOL_ICON("resources/EllipseFillTool.png"),
     ELLIPSEDRAWTOOL_ICON("resources/EllipseDrawTool.png"),
+    SELECTTOOL_ICON("resources/SelectTool.png"),
+    MOVETOOL_ICON("resources/MoveTool.png"),
     // custom cursor image files
     BUCKET_CURSOR("resources/cursors/PaintBucketCursor.png"),
     PENCIL_CURSOR("resources/cursors/PencilCursor.png"),

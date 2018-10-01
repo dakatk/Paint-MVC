@@ -4,6 +4,7 @@ import com.dusten.paint.controllers.PaintController;
 import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
 import com.dusten.paint.popup.MessagePopup;
+import com.dusten.paint.popup.ToolBarPopup;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -29,15 +30,27 @@ public class PaintApp extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         FXMLParser<PaintController, Parent> fxmlParser = new FXMLParser<>(FilesEnum.MAIN_FXML);
-        ToolBar toolBar = new ToolBar();
+        ToolBarPopup toolBar = new ToolBarPopup();
 
         PaintController controller = fxmlParser.getController();
+        Scene scene = new Scene(fxmlParser.getParent(), WIDTH, HEIGHT);
 
         // TODO add scrollbars if canvas size exceeds window size
         primaryStage.setTitle(TITLE + " - <Untitled>");
         primaryStage.setMinWidth(MIN_WIDTH);
         primaryStage.setMinHeight(MIN_HEIGHT);
-        primaryStage.setScene(new Scene(fxmlParser.getParent(), WIDTH, HEIGHT));
+
+        primaryStage.setScene(scene);
+        toolBar.setParentScene(scene);
+
+        primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            // TODO check canvas width adjustment
+        });
+
+        primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
+            // TODO check canvas height adjustment
+        });
+
         primaryStage.setOnCloseRequest(event -> {
 
             if(controller.getImageHelper().hasNotSaved()) {
@@ -47,6 +60,7 @@ public class PaintApp extends Application {
 
                 if(saveQuery.equals(ButtonType.CANCEL))
                     event.consume();
+
                 else {
 
                     if(saveQuery.equals(ButtonType.OK))

@@ -57,7 +57,7 @@ public class ImageController implements Initializable {
     public void setSaved(boolean saved) {
 
         this.saved = saved;
-        this.parent.updateSavedState(this.saved);
+        this.parent.getUpdateStatusCall().set(this.saved);
     }
 
     public void setImage(@NotNull Image image) {

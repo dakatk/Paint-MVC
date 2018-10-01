@@ -24,11 +24,21 @@
         <MenuItem text="Clear" onAction="#clearCanvasAction"
                   accelerator="Shortcut+W" />
 
+        <MenuItem text="Select All" onAction="#selectAllAction"
+                  accelerator="Shortcut+A" />
+
         <MenuItem fx:id="undoMenu" text="Undo" onAction="#undoAction"
                   accelerator="Shortcut+Z" disable="true" />
 
         <MenuItem fx:id="redoMenu" text="Redo" onAction="#redoAction"
                   accelerator="Shortcut+Shift+Z" disable="true" />
+
+        <MenuItem text="Copy" onAction="#copyAction" accelerator="Shortcut+C" />
+
+        <MenuItem text="Cut" onAction="#cutAction" accelerator="Shortcut+X" />
+
+        <MenuItem fx:id="pasteMenu" text="Paste" onAction="#pasteAction"
+                  accelerator="Shortcut+V" disable="true"/>
     </Menu>
     <Menu text="Toolbar">
         <MenuItem fx:id="showToolsMenu" text="Show..." onAction="#showToolbarAction"

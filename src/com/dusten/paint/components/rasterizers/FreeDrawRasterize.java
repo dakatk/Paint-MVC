@@ -6,6 +6,9 @@ import javafx.scene.paint.Paint;
 import java.awt.*;
 import java.util.ArrayList;
 
+/**
+ * @author Dusten Knull
+ */
 public class FreeDrawRasterize {
 
     private ArrayList<Point> drawPoints;
@@ -19,6 +22,15 @@ public class FreeDrawRasterize {
         this.drawPoints = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param context
+     * @param stroke
+     * @param brush
+     * @param strokeWeight
+     * @param x
+     * @param y
+     */
     public void resetStroke(GraphicsContext context, Paint stroke, boolean brush, double strokeWeight, double x, double y) {
 
         this.strokeWeight = strokeWeight;
@@ -40,12 +52,20 @@ public class FreeDrawRasterize {
         context.setFill(currFill);
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void drawNextStroke(double x, double y) {
 
         this.drawPoints.add(new Point((int)x, (int)y));
         this.renderBresenhamLine();
     }
 
+    /**
+     *
+     */
     private void renderBresenhamLine() {
 
         Paint currFill = this.context.getFill();

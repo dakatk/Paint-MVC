@@ -20,7 +20,9 @@ public enum ToolsEnum {
     RECTANGLE_FILL(FilesEnum.RECTANGLEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Rectangle Tool"),
     RECTANGLE_DRAW(FilesEnum.RECTANGLEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Rectangle Tool"),
     ELLIPSE_FILL(FilesEnum.ELLIPSEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Ellipse Tool"),
-    ELLIPSE_DRAW(FilesEnum.ELLIPSEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Ellipse Tool");
+    ELLIPSE_DRAW(FilesEnum.ELLIPSEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Ellipse Tool"),
+    SELECT_AREA(FilesEnum.SELECTTOOL_ICON, Cursor.CROSSHAIR, "Selection Tool"),
+    MOVE_AREA(FilesEnum.MOVETOOL_ICON, Cursor.CROSSHAIR, "Move Selection Tool");
 
     private FilesEnum iconURL;
     private String tooltip;

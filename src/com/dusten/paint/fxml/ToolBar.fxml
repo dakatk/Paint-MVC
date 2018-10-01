@@ -26,6 +26,12 @@
         </VBox.margin>
     </Button>
 
+    <ImageButton fx:id="selectToolButton" prefHeight="50" prefWidth="50" toolType="SELECT_AREA">
+        <VBox.margin>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
+        </VBox.margin>
+    </ImageButton>
+
     <ImageButton fx:id="paintBucketButton" prefHeight="50" prefWidth="50" toolType="BUCKET">
         <VBox.margin>
             <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
@@ -56,7 +62,8 @@
         </VBox.margin>
     </ImageButton>
 
-    <ColorPicker fx:id="colorPicker" onAction="#updateColorAction" prefHeight="50" prefWidth="50">
+    <ColorPicker fx:id="colorPicker" onAction="#updateColorAction" prefHeight="50"
+                 prefWidth="50" styleClass="colorChooser">
         <value>
             <Color/>
         </value>

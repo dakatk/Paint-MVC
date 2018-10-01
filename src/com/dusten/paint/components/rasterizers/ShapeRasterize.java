@@ -1,10 +1,10 @@
 package com.dusten.paint.components.rasterizers;
 
+import com.dusten.paint.components.primitives.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 
 public class ShapeRasterize {
 
@@ -63,13 +63,10 @@ public class ShapeRasterize {
      */
     public void setRectangle(Paint stroke, double x, double y) {
 
-        this.tempRectangle.setX(x);
-        this.tempRectangle.setY(y);
+        this.tempRectangle.setPosition(x, y);
+        this.tempRectangle.setDimensions(1.0, 1.0);
 
-        this.tempRectangle.setWidth(1.0);
-        this.tempRectangle.setHeight(1.0);
-
-        this.tempRectangle.setStroke(stroke);
+        this.tempRectangle.setPaint(stroke);
     }
 
     /**
@@ -191,7 +188,7 @@ public class ShapeRasterize {
             Paint currStroke = context.getStroke();
 
             context.setLineWidth(lineWeight);
-            context.setStroke(this.tempRectangle.getStroke());
+            context.setStroke(this.tempRectangle.getPaint());
             context.strokeRect(renderX, renderY, Math.abs(this.tempRectangle.getWidth()), Math.abs(this.tempRectangle.getHeight()));
 
             context.setLineWidth(currWeight);
@@ -201,7 +198,7 @@ public class ShapeRasterize {
 
             Paint currFill = context.getFill();
 
-            context.setFill(this.tempRectangle.getStroke());
+            context.setFill(this.tempRectangle.getPaint());
             context.fillRect(renderX, renderY, Math.abs(this.tempRectangle.getWidth()), Math.abs(this.tempRectangle.getHeight()));
 
             context.setFill(currFill);

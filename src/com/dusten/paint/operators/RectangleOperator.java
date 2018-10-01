@@ -1,10 +1,10 @@
 package com.dusten.paint.operators;
 
+import com.dusten.paint.components.primitives.Rectangle;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 
 public class RectangleOperator implements PaintOperator {
 
@@ -18,7 +18,7 @@ public class RectangleOperator implements PaintOperator {
 
     public RectangleOperator(@NotNull Rectangle rectangle, @Nullable Double lineWeight) {
 
-        this.paint = rectangle.getStroke();
+        this.paint = rectangle.getPaint();
         this.lineWeight = lineWeight;
 
         this.width = rectangle.getWidth();

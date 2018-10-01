@@ -6,7 +6,10 @@ import javafx.scene.image.Image;
 
 import java.io.InputStream;
 
-// TODO fix image corruption
+/**
+ * @author Dusten Knull
+ */
+// TODO fix image corruption?
 public class CustomCursor {
 
     public static final ImageCursor BUCKET = new CustomCursor(FilesEnum.BUCKET_CURSOR, 1, 1).getCursor();
@@ -30,6 +33,10 @@ public class CustomCursor {
         this.v = v;
     }
 
+    /**
+     *
+     * @return
+     */
     private ImageCursor getCursor() {
 
         Image image = new Image(this.fileStream);

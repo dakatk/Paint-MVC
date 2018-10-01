@@ -3,11 +3,12 @@ package com.dusten.paint.controllers;
 import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
 import com.dusten.paint.enums.ToolsEnum;
-import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.dusten.paint.popup.ToolSettingsPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
@@ -21,8 +22,10 @@ import java.util.ResourceBundle;
  *
  * Controller for ToolBar.fxml
  */
+// TODO add secondary color swatch
 public class ToolBarController implements Initializable {
 
+    @FXML private ImageButton selectToolButton;
     @FXML private ImageButton paintBucketButton;
     @FXML private ImageButton drawToolButton;
     @FXML private ImageButton lineToolButton;
@@ -31,9 +34,10 @@ public class ToolBarController implements Initializable {
     @FXML private ColorPicker colorPicker;
 
     private ToolSettingsPopup toolSettings;
-    private ToolBar parent;
+    private ToolBarPopup parent;
 
     private DrawableCanvas canvas;
+    private ImageButton nextToggle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,19 +50,11 @@ public class ToolBarController implements Initializable {
         this.updateColorAction();
 
         ToggleGroup buttonGroup = new ToggleGroup();
-        buttonGroup.selectedToggleProperty().addListener((value, oldToggle, newToggle) -> {
+        buttonGroup.selectedToggleProperty().addListener((value, oldToggle, newToggle) ->
+            this.nextToggle = (ImageButton)buttonGroup.getSelectedToggle()
+        );
 
-            if(this.canvas == null)
-                return;
-
-            ImageButton nextToggle = (ImageButton)buttonGroup.getSelectedToggle();
-
-            if(nextToggle == null)
-                this.canvas.setToolType(null);
-            else
-                this.canvas.setToolType(nextToggle.getEnumToolType());
-        });
-
+        this.selectToolButton.setToggleGroup(buttonGroup);
         this.paintBucketButton.setToggleGroup(buttonGroup);
         this.drawToolButton.setToggleGroup(buttonGroup);
         this.lineToolButton.setToggleGroup(buttonGroup);
@@ -110,14 +106,36 @@ public class ToolBarController implements Initializable {
 
         if(this.toolSettings != null)
             this.toolSettings.setCanvas(this.canvas);
+
+        this.canvas.setOnMouseEntered(event -> {
+
+            if(this.nextToggle == null) {
+
+                this.canvas.setToolType(null);
+                this.parent.getParentScene().setCursor(Cursor.DEFAULT);
+
+            } else {
+
+                this.canvas.setToolType(this.nextToggle.getEnumToolType());
+                this.parent.getParentScene().setCursor(this.nextToggle.getEnumToolType().getCursor());
+            }
+        });
+
+        this.canvas.setOnMouseExited(event ->
+            this.parent.getParentScene().setCursor(Cursor.DEFAULT)
+        );
     }
 
-    public void setParent(@NotNull ToolBar parent) {
+    public void setParent(@NotNull ToolBarPopup parent) {
 
         this.parent = parent;
         if(this.toolSettings != null)
             this.toolSettings.setToolBar(this.parent);
 
+    }
+
+    public void setSelectToolMode(@NotNull ToolsEnum toolType) {
+        this.selectToolButton.setEnumToolType(toolType, this.canvas);
     }
 
     public void setRectangleToolMode(@NotNull ToolsEnum toolType) {

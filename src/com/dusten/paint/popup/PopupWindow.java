@@ -16,7 +16,7 @@ public class PopupWindow<T> extends Stage {
     private double offsetX;
     private double offsetY;
 
-    public PopupWindow(String title, FilesEnum filesEnum) throws IOException
+    PopupWindow(String title, FilesEnum filesEnum) throws IOException
     {
         super();
 
@@ -31,10 +31,10 @@ public class PopupWindow<T> extends Stage {
         this.setScene(new Scene(fxmlParser.getParent()));
 
         this.setResizable(false);
-        this.setAlwaysOnTop(true);
+        this.toFront();
     }
 
-    protected void setShowOffset(double offsetX, double offsetY) {
+    void setShowOffset(double offsetX, double offsetY) {
 
         this.offsetX = offsetX;
         this.offsetY = offsetY;

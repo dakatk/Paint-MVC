@@ -29,7 +29,7 @@ import java.util.List;
  * An ImageView component with helper functions for loading and saving an image in
  * the 'File' menu
  */
-public class ImageHelper extends StackPane {
+public class ImageHelper extends StackPane implements SaveStatus {
 
     private ImageController controller;
     private Stage mainStage;
@@ -38,11 +38,7 @@ public class ImageHelper extends StackPane {
     private String formatName;
     private File opened;
 
-    private MenuItem saveMenu;
-    private MenuItem saveAsmenu;
-
-    private MenuItem undoMenu;
-    private MenuItem redoMenu;
+    private StatusSet<Boolean> status;
 
     public ImageHelper() throws IOException {
 
@@ -63,6 +59,44 @@ public class ImageHelper extends StackPane {
 
         this.controller.setCanvasSize(parent.getPrefWidth(), parent.getPrefHeight());
         this.getChildren().addAll(parent.getChildren());
+    }
+
+    @Override
+    public void setUpdateStatusCall(@NotNull MenuItem saveMenu, @NotNull MenuItem saveAsMenu,
+                             @NotNull MenuItem undoMenu, @NotNull MenuItem redoMenu) {
+
+        this.status = (status) -> {
+
+            // default string to show when no file is loaded
+            String openedName = "<Untitled>";
+
+            if(ImageHelper.this.opened != null)
+                openedName = ImageHelper.this.opened.getName();
+
+            String title = PaintApp.TITLE + " - " + openedName;
+
+            if(!status)
+                ImageHelper.this.mainStage.setTitle(title + "*");
+            else
+                ImageHelper.this.mainStage.setTitle(title);
+
+            if(saveMenu != null && saveAsMenu != null) {
+
+                saveMenu.setDisable(status);
+                saveAsMenu.setDisable(status);
+            }
+
+            if(redoMenu != null && undoMenu != null) {
+
+                undoMenu.setDisable(ImageHelper.this.controller.getCanvas().isUndoDisabled());
+                redoMenu.setDisable(ImageHelper.this.controller.getCanvas().isRedoDisabled());
+            }
+        };
+    }
+
+    @Override
+    public StatusSet<Boolean> getUpdateStatusCall() {
+        return this.status;
     }
 
     /**
@@ -120,7 +154,8 @@ public class ImageHelper extends StackPane {
             this.mainStage.setTitle(PaintApp.TITLE + " - " + this.opened.getName() + "*");
             this.controller.setImage(new Image(this.opened.toURI().toString()));
 
-            this.updateSavedState(true);
+            if(this.status != null)
+                this.status.set(true);
         }
     }
 
@@ -211,71 +246,24 @@ public class ImageHelper extends StackPane {
         }
     }
 
-    /**
-     * Tells the application whether or not it should show
-     * the state as 'saved' or not, letting the user know
-     * when they can and can't save the current canvas
-     *
-     * @param saved Whether or not to set the state to 'saved'
-     */
-    public void updateSavedState(boolean saved) {
-
-        // default string to show when no file is loaded
-        String openedName = "<Untitled>";
-
-        if(this.opened != null)
-            openedName = this.opened.getName();
-
-        String title = PaintApp.TITLE + " - " + openedName;
-
-        if(!saved)
-            this.mainStage.setTitle(title + "*");
-        else
-            this.mainStage.setTitle(title);
-
-        if(this.saveMenu != null && this.saveAsmenu != null) {
-
-            this.saveMenu.setDisable(saved);
-            this.saveAsmenu.setDisable(saved);
-        }
-
-        if(this.redoMenu != null && this.undoMenu != null) {
-
-            this.undoMenu.setDisable(this.controller.getCanvas().isUndoDisabled());
-            this.redoMenu.setDisable(this.controller.getCanvas().isRedoDisabled());
-        }
+    public void copySelectedArea() {
+        this.controller.getCanvas().copySelectedArea(false);
     }
 
-    /**
-     * Set the MenuItem object references for the Save and Save-As menus. This is
-     * for the purpose of disabling/enabling these menus when the save status of
-     * the application is updated
-     *
-     * @param saveMenu 'Save' MenuItem object
-     * @param saveAsMenu 'Save-As' MenuItem object
-     */
-    public void setSaveMenus(@NotNull MenuItem saveMenu, @NotNull MenuItem saveAsMenu) {
-
-        this.saveMenu = saveMenu;
-        this.saveAsmenu = saveAsMenu;
+    public void cutSelectedArea() {
+        this.controller.getCanvas().copySelectedArea(true);
     }
 
-    /**
-     * Set the MenuItem object references for the Undo and Redo menus. This is
-     * for the purpose of disabling/enabling these menus when the save status of
-     * the application is updated
-     *
-     * @param undoMenu 'Undo' MenuItem object
-     * @param redoMenu 'Redo' MenuItem object
-     */
-    public void setHistoryMenus(@NotNull MenuItem undoMenu, @NotNull MenuItem redoMenu) {
-
-        this.undoMenu = undoMenu;
-        this.redoMenu = redoMenu;
+    public void pasteClipboard() {
+        this.controller.getCanvas().pasteClipboard();
     }
 
     public void clearCanvas() {
         this.controller.getCanvas().clearAll();
+    }
+
+    public void selectAll() {
+        this.controller.getCanvas().selectAll();
     }
 
     public void undoEdit() {

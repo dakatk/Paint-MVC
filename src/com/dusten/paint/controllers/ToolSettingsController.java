@@ -2,16 +2,20 @@ package com.dusten.paint.controllers;
 
 import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
-import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * @author Dusten Knull
+ */
 public class ToolSettingsController implements Initializable {
 
     @FXML private ImageButton rectangleFillMode;
@@ -20,29 +24,47 @@ public class ToolSettingsController implements Initializable {
     @FXML private ImageButton ellipseDrawMode;
     @FXML private ImageButton pencilDrawMode;
     @FXML private ImageButton brushDrawMode;
+    @FXML private ImageButton selectMode;
+    @FXML private ImageButton moveMode;
     @FXML private Slider fillTolerance;
     @FXML private Slider lineWeight;
 
     private DrawableCanvas canvas;
-    private ToolBar toolBar;
+    private ToolBarPopup toolBar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        this.fillTolerance.adjustValue(DrawableCanvas.DEFAULT_FILL_TOLERANCE * 100);
-        this.lineWeight.adjustValue(DrawableCanvas.DEFAULT_LINE_WEIGHT);
-
         this.fillTolerance.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-            if(this.canvas == null) return;
-            this.canvas.setFillTolerance(this.fillTolerance.getValue() / 100.0);
+            this.fillTolerance.setTooltip(new Tooltip(String.format("%.2f%%", this.fillTolerance.getValue())));
+
+            if(this.canvas != null)
+                this.canvas.setFillTolerance(this.fillTolerance.getValue() / 100.0);
         });
 
         this.lineWeight.valueProperty().addListener((observable, oldValue, newValue) -> {
 
-            if(this.canvas == null) return;
-            this.canvas.setLineWeight(this.lineWeight.getValue());
+            this.lineWeight.setTooltip(new Tooltip(String.valueOf((int)this.lineWeight.getValue()) + "px"));
+
+            if(this.canvas != null)
+                this.canvas.setLineWeight(this.lineWeight.getValue());
         });
+
+        this.fillTolerance.adjustValue(DrawableCanvas.DEFAULT_FILL_TOLERANCE * 100);
+        this.lineWeight.adjustValue(DrawableCanvas.DEFAULT_LINE_WEIGHT);
+
+        ToggleGroup selectModes = new ToggleGroup();
+        selectModes.selectedToggleProperty().addListener((observable, oldValue, newVale) -> {
+
+            ImageButton selectedMode = (ImageButton)selectModes.getSelectedToggle();
+
+            if(this.toolBar != null)
+                this.toolBar.setSelectToolMode(selectedMode.getEnumToolType());
+        });
+
+        this.selectMode.setToggleGroup(selectModes);
+        this.moveMode.setToggleGroup(selectModes);
 
         ToggleGroup rectangleModes = new ToggleGroup();
         rectangleModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
@@ -81,7 +103,7 @@ public class ToolSettingsController implements Initializable {
         this.brushDrawMode.setToggleGroup(drawModes);
     }
 
-    public void setToolBar(@NotNull ToolBar toolBar) {
+    public void setToolBar(@NotNull ToolBarPopup toolBar) {
         this.toolBar = toolBar;
     }
 

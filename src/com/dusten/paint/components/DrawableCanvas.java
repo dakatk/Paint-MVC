@@ -1,12 +1,15 @@
 package com.dusten.paint.components;
 
+import com.dusten.paint.components.primitives.Rectangle;
 import com.dusten.paint.components.rasterizers.FreeDrawRasterize;
+import com.dusten.paint.components.rasterizers.SelectionRasterize;
 import com.dusten.paint.components.rasterizers.ShapeRasterize;
 import com.dusten.paint.controllers.ImageController;
 import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.operators.*;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -21,16 +24,19 @@ import java.util.List;
 /**
  * @author Dusten Knull
  */
+// TODO right click should use secondary color
 public class DrawableCanvas extends Canvas {
 
     public static final double DEFAULT_FILL_TOLERANCE = 0.1;
     public static final double DEFAULT_LINE_WEIGHT = 2.0;
 
+    private SelectionRasterize selectionRasterize;
     private FreeDrawRasterize freeDrawRasterize;
     private ShapeRasterize shapeRasterize;
 
     private ImageController imageController;
     private GraphicsContext context;
+    private Clipboard clipboard;
     private ToolsEnum toolType;
 
     private List<PaintOperator> editHistory;
@@ -47,6 +53,7 @@ public class DrawableCanvas extends Canvas {
         this.editHistory = new ArrayList<>();
         this.editIndex = -1;
 
+        this.selectionRasterize = new SelectionRasterize();
         this.freeDrawRasterize = new FreeDrawRasterize();
         this.shapeRasterize = new ShapeRasterize();
         this.toolType = null;
@@ -101,6 +108,16 @@ public class DrawableCanvas extends Canvas {
                     this.freeDrawRasterize.drawNextStroke(event.getX(), event.getY());
                     break;
 
+                case SELECT_AREA:
+                    this.redraw();
+                    this.selectionRasterize.renderSelectedRectangle(this.context, event.getX(), event.getY());
+                    break;
+
+                case MOVE_AREA:
+                    this.redraw();
+                    this.selectionRasterize.renderMoveSelection(this.context, event.getX(), event.getY());
+                    break;
+
                 default:
                     break;
             }
@@ -131,6 +148,14 @@ public class DrawableCanvas extends Canvas {
                 case PAINTBRUSH: // ordinal 3
                     this.freeDrawRasterize.resetStroke(this.context, this.context.getStroke(),
                             this.toolType.equals(ToolsEnum.PAINTBRUSH), this.lineWeight, event.getX(), event.getY());
+                    break;
+
+                case SELECT_AREA:
+                    this.selectionRasterize.setSelectedRectangle(event.getX(), event.getY());
+                    break;
+
+                case MOVE_AREA:
+                    this.selectionRasterize.setMoveSelection(this.getSnapshot());
                     break;
 
                 default:
@@ -174,6 +199,11 @@ public class DrawableCanvas extends Canvas {
                             this.lineWeight, this.freeDrawRasterize.isBrush(), this.getWidth(), this.getHeight()));
                     break;
 
+                case MOVE_AREA:
+                    this.addEdit(new MoveOperator(this.selectionRasterize.getSourceImage(),
+                            this.selectionRasterize.getSelectedArea(), this.selectionRasterize.getDest(), true));
+                    break;
+
                 default:
                     event.consume();
                     break;
@@ -201,8 +231,9 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
+     * Adds an operator to the edit history
      *
-     * @param edit
+     * @param edit Operator to add to history
      */
     private void addEdit(PaintOperator edit) {
 
@@ -216,7 +247,8 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     *
+     * Redraws the entire edit history while preserving current
+     * GraphicsContext status
      */
     private void redraw() {
 
@@ -236,7 +268,9 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     *
+     * "Un-does" the most recent edit by moving the edit history
+     * index back one, if applicable (DOES NOT remove the PaintOperator
+     * from the edit history list)
      */
     public void undoEdit() {
 
@@ -249,7 +283,8 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     *
+     * "Re-does" the most recently undone edit by moving the edit history
+     * index up one, if applicable
      */
     public void redoEdit() {
 
@@ -259,6 +294,52 @@ public class DrawableCanvas extends Canvas {
         this.redraw();
 
         this.imageController.setSaved(false);
+    }
+
+    /**
+     * Copy or cut the selected area to the clipboard
+     *
+     * @param cut Whether or not to cut the current slection when copying
+     */
+    public void copySelectedArea(boolean cut) {
+
+        Rectangle selection;
+
+        if(this.selectionRasterize.hasSelectedArea())
+            selection = this.selectionRasterize.getSelectedArea();
+        else
+            selection = new Rectangle(0, 0, this.getWidth(), this.getHeight());
+
+        if(cut) {
+
+            double cx = this.selectionRasterize.getSelectedArea().getX();
+            double cy = this.selectionRasterize.getSelectedArea().getY();
+            double cw = this.selectionRasterize.getSelectedArea().getWidth();
+            double ch = this.selectionRasterize.getSelectedArea().getHeight();
+
+            this.context.clearRect(cx, cy, cw, ch);
+        }
+        this.clipboard = new Clipboard(this.getSnapshot(), selection, cut);
+    }
+
+    /**
+     * If something is in the clipboard, paste it at the top left of the canvas
+     */
+    public void pasteClipboard() {
+
+        if(this.clipboard == null)
+            return;
+
+        double width = this.clipboard.getSelectedWidth();
+        double height = this.clipboard.getSelectedHeight();
+
+        this.addEdit(this.clipboard.getAsMoveOperator());
+        this.redraw();
+
+        this.selectionRasterize.setSelectedRectangle(0.0, 0.0);
+        this.selectionRasterize.renderSelectedRectangle(this.context, width, height);
+
+        this.clipboard = null;
     }
 
     /**
@@ -288,10 +369,16 @@ public class DrawableCanvas extends Canvas {
     public void setToolType(@Nullable ToolsEnum toolType) {
 
         this.toolType = toolType;
+
         if(this.toolType != null)
             this.setCursor(this.toolType.getCursor());
+        else
+            this.setCursor(Cursor.DEFAULT);
     }
 
+    /**
+     * Clears the entire canvas
+     */
     public void clearAll() {
 
         // Checks for previous operand to have been 'clear' so as to avoid spam
@@ -299,6 +386,15 @@ public class DrawableCanvas extends Canvas {
             return;
 
         this.addEdit(new ClearOperator(Color.WHITE, this.getWidth(), this.getHeight()));
+    }
+
+    /**
+     * Selects the entire canvas
+     */
+    public void selectAll() {
+
+        this.selectionRasterize.setSelectedRectangle(0.0, 0.0);
+        this.selectionRasterize.renderSelectedRectangle(this.context, this.getWidth(), this.getHeight());
     }
 
     public void setLineWeight(double lineWeight) {

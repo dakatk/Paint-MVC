@@ -7,3 +7,7 @@
     -fx-stroke: "#ADADAD";
     -fx-stroke-width: 1;
 }
+
+.colorChooser {
+    -fx-background-color: transparent;
+}

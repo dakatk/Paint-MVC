@@ -3,7 +3,7 @@ package com.dusten.paint.helpers;
 import com.dusten.paint.controllers.MenuController;
 import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
-import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.scene.control.MenuBar;
 import javafx.stage.Stage;
@@ -28,7 +28,7 @@ public class MenuHelper extends MenuBar {
         this.getMenus().addAll(fxmlParser.getParent().getMenus());
     }
 
-    public void setToolBar(@NotNull ToolBar toolBar) {
+    public void setToolBar(@NotNull ToolBarPopup toolBar) {
         this.controller.setToolBar(toolBar);
     }
 

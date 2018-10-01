@@ -1,7 +1,7 @@
 package com.dusten.paint.controllers;
 
 import com.dusten.paint.helpers.ImageHelper;
-import com.dusten.paint.main.ToolBar;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.dusten.paint.popup.ResizePopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
@@ -26,10 +26,11 @@ public class MenuController implements Initializable {
     @FXML private MenuItem hideToolsMenu;
     @FXML private MenuItem undoMenu;
     @FXML private MenuItem redoMenu;
+    @FXML private MenuItem pasteMenu;
 
     private ResizePopup resizePopup;
     private ImageHelper imageHelper;
-    private ToolBar toolBar;
+    private ToolBarPopup toolBar;
     private Stage mainStage;
 
     @Override
@@ -100,7 +101,8 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Clears the current canvas to it's set background color (set from
+     * the ToolBar)
      */
     @FXML
     private void clearCanvasAction() {
@@ -110,7 +112,8 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Allows the user to undo the previous action, limited to
+     * what's currently stored in the edit history
      */
     @FXML
     private void undoAction() {
@@ -123,7 +126,8 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Allows the user to redo the previously undone action, limited to
+     * what's currently stored in the edit history
      */
     @FXML
     private void redoAction() {
@@ -136,7 +140,53 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Copy selected canvas portion
+     */
+    @FXML
+    private void copyAction() {
+
+        if(this.imageHelper == null) return;
+
+        this.imageHelper.copySelectedArea();
+        this.pasteMenu.setDisable(false);
+    }
+
+    /**
+     * Cut selected canvas portion
+     */
+    @FXML
+    private void cutAction() {
+
+        if(this.imageHelper == null) return;
+
+        this.imageHelper.cutSelectedArea();
+        this.pasteMenu.setDisable(false);
+    }
+
+    /**
+     * Paste the current contents of the clipboard
+     */
+    @FXML
+    private void pasteAction() {
+
+        if(this.imageHelper == null) return;
+
+        this.imageHelper.pasteClipboard();
+        this.pasteMenu.setDisable(true);
+    }
+
+    /**
+     * Selects the entire canvas
+     */
+    @FXML
+    private void selectAllAction() {
+
+        if(this.imageHelper == null) return;
+        this.imageHelper.selectAll();
+    }
+
+    /**
+     * Shows the ToolBar popup window
      */
     @FXML
     private void showToolbarAction() {
@@ -149,7 +199,7 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Hides the ToolBar popup window
      */
     @FXML
     private void hideToolbarAction() {
@@ -162,7 +212,7 @@ public class MenuController implements Initializable {
     }
 
     /**
-     *
+     * Shows the ToolBar settings popup window
      */
     @FXML
     private void showToolSettingsAction() {
@@ -177,7 +227,7 @@ public class MenuController implements Initializable {
      *
      * @param toolBar The application's current toolbar
      */
-    public void setToolBar(@NotNull ToolBar toolBar) {
+    public void setToolBar(@NotNull ToolBarPopup toolBar) {
 
         this.toolBar = toolBar;
         this.toolBar.setOnCloseRequest(event -> {
@@ -187,11 +237,14 @@ public class MenuController implements Initializable {
         });
     }
 
+    /**
+     *
+     * @param imageHelper
+     */
     public void setImageHelper(@NotNull ImageHelper imageHelper) {
 
         this.imageHelper = imageHelper;
-        this.imageHelper.setSaveMenus(this.saveMenu, this.saveAsMenu);
-        this.imageHelper.setHistoryMenus(this.undoMenu, this.redoMenu);
+        this.imageHelper.setUpdateStatusCall(this.saveMenu, this.saveAsMenu, this.undoMenu, this.redoMenu);
     }
 
     public void setMainStage(@NotNull Stage mainStage) {
