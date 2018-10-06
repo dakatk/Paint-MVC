@@ -4,13 +4,14 @@ import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
+import javafx.scene.text.Font;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
@@ -24,16 +25,36 @@ public class ToolSettingsController implements Initializable {
     @FXML private ImageButton ellipseDrawMode;
     @FXML private ImageButton pencilDrawMode;
     @FXML private ImageButton brushDrawMode;
+    @FXML private ImageButton eraserDrawMode;
+    @FXML private ImageButton lineDrawMode;
+    @FXML private ImageButton arcDrawMode;
     @FXML private ImageButton selectMode;
     @FXML private ImageButton moveMode;
+
+    @FXML private ComboBox<String> fontNames;
     @FXML private Slider fillTolerance;
     @FXML private Slider lineWeight;
+    @FXML private Slider fontWeight;
 
+    @FXML private TabPane parentPane;
+
+    private HashMap<String, Tab> tabsByName;
     private DrawableCanvas canvas;
     private ToolBarPopup toolBar;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        this.fontNames.itemsProperty().get().addAll(Font.getFamilies());
+        this.fontNames.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+            this.fontNames.setTooltip(new Tooltip(newValue));
+
+            if(this.canvas != null)
+                this.canvas.setFontName(newValue);
+        });
+
+        this.fontNames.getSelectionModel().select(0);
 
         this.fillTolerance.valueProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -51,13 +72,23 @@ public class ToolSettingsController implements Initializable {
                 this.canvas.setLineWeight(this.lineWeight.getValue());
         });
 
+        this.fontWeight.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+            this.fontWeight.setTooltip(new Tooltip(String.valueOf((int)this.fontWeight.getValue()) + "pt"));
+
+            if(this.canvas != null)
+                this.canvas.setFontWeight(this.fontWeight.getValue());
+        });
+
         this.fillTolerance.adjustValue(DrawableCanvas.DEFAULT_FILL_TOLERANCE * 100);
         this.lineWeight.adjustValue(DrawableCanvas.DEFAULT_LINE_WEIGHT);
+        this.fontWeight.adjustValue(DrawableCanvas.DEFAULT_FONT_WEIGHT);
 
         ToggleGroup selectModes = new ToggleGroup();
         selectModes.selectedToggleProperty().addListener((observable, oldValue, newVale) -> {
 
             ImageButton selectedMode = (ImageButton)selectModes.getSelectedToggle();
+            if(selectedMode == null) return;
 
             if(this.toolBar != null)
                 this.toolBar.setSelectToolMode(selectedMode.getEnumToolType());
@@ -70,6 +101,7 @@ public class ToolSettingsController implements Initializable {
         rectangleModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             ImageButton selectedMode = (ImageButton)rectangleModes.getSelectedToggle();
+            if(selectedMode == null) return;
 
             if(this.toolBar != null)
                 this.toolBar.setRectangleToolMode(selectedMode.getEnumToolType());
@@ -82,6 +114,7 @@ public class ToolSettingsController implements Initializable {
         ellipseModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             ImageButton selectedMode = (ImageButton)ellipseModes.getSelectedToggle();
+            if(selectedMode == null) return;
 
             if(this.toolBar != null)
                 this.toolBar.setEllipseToolMode(selectedMode.getEnumToolType());
@@ -94,13 +127,36 @@ public class ToolSettingsController implements Initializable {
         drawModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
 
             ImageButton selectedMode = (ImageButton)drawModes.getSelectedToggle();
+            if(selectedMode == null) return;
 
             if(this.toolBar != null)
                 this.toolBar.setDrawToolMode(selectedMode.getEnumToolType());
         });
 
+        this.eraserDrawMode.setToggleGroup(drawModes);
         this.pencilDrawMode.setToggleGroup(drawModes);
         this.brushDrawMode.setToggleGroup(drawModes);
+
+        ToggleGroup lineModes = new ToggleGroup();
+        lineModes.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+
+            ImageButton selectedMode = (ImageButton)lineModes.getSelectedToggle();
+            if(selectedMode == null) return;
+
+            if(this.toolBar != null)
+                this.toolBar.setLineToolMode(selectedMode.getEnumToolType());
+        });
+
+        this.lineDrawMode.setToggleGroup(lineModes);
+        this.arcDrawMode.setToggleGroup(lineModes);
+
+        this.tabsByName = new HashMap<>();
+        for(Tab tab : this.parentPane.getTabs())
+            this.tabsByName.put(tab.getText(), tab);
+    }
+
+    public void selectTab(@NotNull String tabName) {
+        this.parentPane.getSelectionModel().select(this.tabsByName.get(tabName));
     }
 
     public void setToolBar(@NotNull ToolBarPopup toolBar) {

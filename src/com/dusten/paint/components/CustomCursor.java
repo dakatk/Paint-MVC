@@ -15,6 +15,9 @@ public class CustomCursor {
     public static final ImageCursor BUCKET = new CustomCursor(FilesEnum.BUCKET_CURSOR, 1, 1).getCursor();
     public static final ImageCursor PENCIL = new CustomCursor(FilesEnum.PENCIL_CURSOR, 0, 1).getCursor();
     public static final ImageCursor BRUSH = new CustomCursor(FilesEnum.PAINTBRUSH_CURSOR, 0, 1).getCursor();
+    public static final ImageCursor MOVE = new CustomCursor(FilesEnum.MOVETOOL_CURSOR, 0, 0).getCursor();
+    public static final ImageCursor ERASER = new CustomCursor(FilesEnum.ERASER_CURSOR, 0, 1).getCursor();
+    public static final ImageCursor EYEDROPPER = new CustomCursor(FilesEnum.EYEDROPPER_CURSOR, 0, 1).getCursor();
 
     private InputStream fileStream;
     private double u;

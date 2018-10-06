@@ -21,6 +21,6 @@ public class ClearOperator implements PaintOperator {
     public void draw(GraphicsContext context) {
 
         context.setFill(this.paint);
-        context.clearRect(0.0, 0.0, this.canvasWidth, this.canvasHeight);
+        context.fillRect(0.0, 0.0, this.canvasWidth, this.canvasHeight);
     }
 }

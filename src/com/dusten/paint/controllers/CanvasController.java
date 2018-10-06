@@ -1,7 +1,7 @@
 package com.dusten.paint.controllers;
 
 import com.dusten.paint.components.DrawableCanvas;
-import com.dusten.paint.helpers.ImageHelper;
+import com.dusten.paint.helpers.CanvasHelper;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -17,18 +17,18 @@ import java.util.ResourceBundle;
  *
  * Controller for ImageHelper.fxml
  */
-public class ImageController implements Initializable {
+public class CanvasController implements Initializable {
 
     @FXML private Rectangle background;
     @FXML private DrawableCanvas canvas;
 
-    private ImageHelper parent;
+    private CanvasHelper parent;
     private boolean saved;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        this.canvas.setImageController(this);
+        this.canvas.setCanvasController(this);
         this.saved = true;
     }
 
@@ -57,14 +57,14 @@ public class ImageController implements Initializable {
     public void setSaved(boolean saved) {
 
         this.saved = saved;
-        this.parent.getUpdateStatusCall().set(this.saved);
+        this.parent.updateSaveStatus(saved);
     }
 
     public void setImage(@NotNull Image image) {
         this.canvas.loadImage(image);
     }
 
-    public void setParent(@NotNull ImageHelper parent) {
+    public void setParent(@NotNull CanvasHelper parent) {
         this.parent = parent;
     }
 

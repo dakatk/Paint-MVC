@@ -1,4 +1,4 @@
-package com.dusten.paint.components.rasterizers;
+package com.dusten.paint.rasterizers;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
@@ -15,8 +15,8 @@ public class FreeDrawRasterize {
     private GraphicsContext context;
     private Paint stroke;
 
-    private boolean brush;
     private double strokeWeight;
+    private boolean brush;
 
     public FreeDrawRasterize() {
         this.drawPoints = new ArrayList<>();
@@ -119,6 +119,10 @@ public class FreeDrawRasterize {
 
     public ArrayList<Point> getDrawPoints() {
         return this.drawPoints;
+    }
+
+    public Paint getStroke() {
+        return this.stroke;
     }
 
     public boolean isBrush() {

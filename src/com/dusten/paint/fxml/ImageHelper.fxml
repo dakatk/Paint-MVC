@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Rectangle?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-           fx:controller="com.dusten.paint.controllers.ImageController"
+           fx:controller="com.dusten.paint.controllers.CanvasController"
            prefWidth="460.0" prefHeight="460.0">
 
         <Rectangle fx:id="background" styleClass="imageCanvas" StackPane.alignment="CENTER"/>

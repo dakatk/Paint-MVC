@@ -16,9 +16,16 @@ import javafx.scene.image.ImageView;
 public class ImageButton extends ToggleButton {
 
     private ToolsEnum enumToolType;
+    private String settingsTab;
 
     public ImageButton(@NamedArg("toolType") String toolType) {
+        this(toolType, null);
+    }
+
+    public ImageButton(@NamedArg("toolType") String toolType, @NamedArg("settingsTab") String settingsTab) {
+
         this.setEnumToolType(ToolsEnum.valueOf(toolType), null);
+        this.settingsTab = settingsTab;
     }
 
     /**
@@ -60,5 +67,9 @@ public class ImageButton extends ToggleButton {
      */
     public ToolsEnum getEnumToolType() {
         return this.enumToolType;
+    }
+
+    public String getSettingsTab() {
+        return this.settingsTab;
     }
 }

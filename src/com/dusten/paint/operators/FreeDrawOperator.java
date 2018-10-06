@@ -9,7 +9,6 @@ import javafx.scene.paint.Paint;
 import java.awt.*;
 import java.util.ArrayList;
 
-// TODO drawing doesn't persist
 public class FreeDrawOperator implements PaintOperator {
 
     private Task<Void> subroutine;

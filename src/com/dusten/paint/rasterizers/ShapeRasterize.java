@@ -1,72 +1,96 @@
-package com.dusten.paint.components.rasterizers;
+package com.dusten.paint.rasterizers;
 
-import com.dusten.paint.components.primitives.Rectangle;
+import com.dusten.paint.primitives.Arc;
+import com.dusten.paint.primitives.Ellipse;
+import com.dusten.paint.primitives.Line;
+import com.dusten.paint.primitives.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.ArcType;
 
 public class ShapeRasterize {
 
     private Rectangle tempRectangle;
-    private Circle tempEllipse;
+    private Ellipse tempEllipse;
     private Line tempLine;
+    private Arc tempArc;
 
     public ShapeRasterize() {
 
         this.tempRectangle = new Rectangle();
-        this.tempEllipse = new Circle();
+        this.tempEllipse = new Ellipse();
         this.tempLine = new Line();
+        this.tempArc = new Arc();
     }
 
     /**
      * Sets the current line's initial position to be at the
      * current mouse position
      *
-     * @param stroke The stroke color to draw the line with
+     * @param paint The paint color to draw the line with
      * @param x Current mouse pointer 'x' position on canvas
      * @param y Current mouse pointer 'y' position on canvas
      */
-    public void setLine(Paint stroke, double x, double y) {
+    public void setLine(Paint paint, double x, double y) {
+
+        this.tempLine.setPaint(paint);
 
         this.tempLine.setStartX(x);
         this.tempLine.setStartY(y);
 
         this.tempLine.setEndX(x);
         this.tempLine.setEndY(y);
-
-        this.tempLine.setStroke(stroke);
     }
 
     /**
      *
-     * @param stroke
+     * @param paint
      * @param x
      * @param y
      */
-    public void setEllipse(Paint stroke, double x, double y) {
+    public void setArc(Paint paint, double x, double y) {
+
+        this.tempArc.setPaint(paint);
+
+        this.tempArc.setX(x);
+        this.tempArc.setY(y);
+
+        this.tempArc.setEndPoint(x, y);
+    }
+
+    /**
+     * Sets the current ellipse's initial position to be at the
+     * current mouse position
+     *
+     * @param paint The paint color to draw the ellipse with
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
+     */
+    public void setEllipse(Paint paint, double x, double y) {
+
+        this.tempEllipse.setPaint(paint);
 
         this.tempEllipse.setCenterX(x);
         this.tempEllipse.setCenterY(y);
 
-        this.tempEllipse.setScaleX(0.5);
-        this.tempEllipse.setScaleY(0.5);
-
-        this.tempEllipse.setStroke(stroke);
+        this.tempEllipse.setRadiusX(0.5);
+        this.tempEllipse.setRadiusY(0.5);
     }
 
     /**
+     * Sets the current rectangle's initial position to be at the
+     * current mouse position
      *
-     * @param stroke
-     * @param x
-     * @param y
+     * @param paint The paint color to draw the rectangle with
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
      */
-    public void setRectangle(Paint stroke, double x, double y) {
+    public void setRectangle(Paint paint, double x, double y) {
 
         this.tempRectangle.setPosition(x, y);
         this.tempRectangle.setDimensions(1.0, 1.0);
 
-        this.tempRectangle.setPaint(stroke);
+        this.tempRectangle.setPaint(paint);
     }
 
     /**
@@ -86,9 +110,41 @@ public class ShapeRasterize {
         Paint currStroke = context.getStroke();
 
         context.setLineWidth(lineWeight);
-        context.setStroke(this.tempLine.getStroke());
+        context.setStroke(this.tempLine.getPaint());
         context.strokeLine(this.tempLine.getStartX(), this.tempLine.getStartY(),
                 this.tempLine.getEndX(), this.tempLine.getEndY());
+
+        context.setLineWidth(currWeight);
+        context.setStroke(currStroke);
+    }
+
+    /**
+     *
+     * @param context
+     * @param lineWeight
+     * @param x
+     * @param y
+     */
+    public void renderArc(GraphicsContext context, double lineWeight, double x, double y) {
+
+        this.tempArc.setEndPoint(x, y);
+
+        double renderX = this.tempArc.getX();
+        double renderY = this.tempArc.getY();
+
+        if(this.tempArc.getWidth() < 0.0)
+            renderX += this.tempArc.getWidth();
+
+        if(this.tempArc.getHeight() < 0.0)
+            renderY += this.tempArc.getHeight();
+
+        double currWeight = context.getLineWidth();
+        Paint currStroke = context.getStroke();
+
+        context.setLineWidth(lineWeight);
+        context.setStroke(this.tempArc.getPaint());
+        context.strokeArc(renderX, renderY, Math.abs(this.tempArc.getWidth()),
+                Math.abs(this.tempArc.getHeight()), this.tempArc.getAngle(), 180.0, ArcType.OPEN);
 
         context.setLineWidth(currWeight);
         context.setStroke(currStroke);
@@ -111,18 +167,18 @@ public class ShapeRasterize {
      */
     private void renderEllipse(GraphicsContext context, Double lineWeight, double x, double y) {
 
-        this.tempEllipse.setScaleX(Math.abs(x - this.tempEllipse.getCenterX()));
-        this.tempEllipse.setScaleY(Math.abs(y - this.tempEllipse.getCenterY()));
+        this.tempEllipse.setRadiusX(Math.abs(x - this.tempEllipse.getCenterX()));
+        this.tempEllipse.setRadiusY(Math.abs(y - this.tempEllipse.getCenterY()));
 
         if(lineWeight != null) {
 
             double currWeight = context.getLineWidth();
             Paint currStroke = context.getStroke();
 
-            context.setStroke(this.tempEllipse.getStroke());
+            context.setStroke(this.tempEllipse.getPaint());
             context.setLineWidth(lineWeight);
             context.strokeOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
-                    this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
+                    this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
 
             context.setLineWidth(currWeight);
             context.setFill(currStroke);
@@ -131,9 +187,9 @@ public class ShapeRasterize {
 
             Paint currFill = context.getFill();
 
-            context.setFill(this.tempEllipse.getStroke());
+            context.setFill(this.tempEllipse.getPaint());
             context.fillOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
-                    this.tempEllipse.getScaleX(), this.tempEllipse.getScaleY());
+                    this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
 
             context.setFill(currFill);
         }
@@ -205,11 +261,15 @@ public class ShapeRasterize {
         }
     }
 
+    public Arc getArc() {
+        return this.tempArc;
+    }
+
     public Line getLine() {
         return this.tempLine;
     }
 
-    public Circle getEllipse() {
+    public Ellipse getEllipse() {
         return this.tempEllipse;
     }
 

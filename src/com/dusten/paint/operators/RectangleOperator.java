@@ -1,6 +1,6 @@
 package com.dusten.paint.operators;
 
-import com.dusten.paint.components.primitives.Rectangle;
+import com.dusten.paint.primitives.Rectangle;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.canvas.GraphicsContext;

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.dusten.paint.helpers.ImageHelper?>
+<?import com.dusten.paint.helpers.CanvasHelper?>
 <?import com.dusten.paint.helpers.MenuHelper?>
 <?import javafx.scene.layout.StackPane?>
 <?import java.net.URL?>
 <?import javafx.scene.control.ScrollBar?>
+
 <StackPane fx:controller="com.dusten.paint.controllers.PaintController"
            xmlns:fx="http://javafx.com/fxml" styleClass="parentPane">
 
-    <ImageHelper fx:id="imageHelper" StackPane.alignment="CENTER"/>
+    <CanvasHelper fx:id="canvasHelper" StackPane.alignment="CENTER"/>
     <MenuHelper fx:id="menuHelper" StackPane.alignment="TOP_LEFT"/>
 
-    <ScrollBar StackPane.alignment="TOP_RIGHT" visible="false" orientation="VERTICAL"/>
-    <ScrollBar StackPane.alignment="BOTTOM_LEFT" visible="false" />
+    <ScrollBar fx:id="verticalScroll" StackPane.alignment="TOP_RIGHT" visible="false" orientation="VERTICAL"/>
+    <ScrollBar fx:id="horizontalScroll" StackPane.alignment="BOTTOM_LEFT" visible="false" />
 
     <stylesheets>
         <URL value="@../css/PaintApp.css"/>

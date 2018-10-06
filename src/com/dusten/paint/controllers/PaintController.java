@@ -1,11 +1,12 @@
 package com.dusten.paint.controllers;
 
-import com.dusten.paint.helpers.ImageHelper;
+import com.dusten.paint.helpers.CanvasHelper;
 import com.dusten.paint.helpers.MenuHelper;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -19,13 +20,34 @@ import java.util.ResourceBundle;
 public class PaintController implements Initializable {
 
     @FXML private MenuHelper menuHelper;
-    @FXML private ImageHelper imageHelper;
+    @FXML private CanvasHelper canvasHelper;
+
+    @FXML private ScrollBar verticalScroll;
+    @FXML private ScrollBar horizontalScroll;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        this.imageHelper.setLayoutY(this.menuHelper.getHeight());
-        this.menuHelper.setImageHelper(this.imageHelper);
+        this.canvasHelper.setLayoutY(this.menuHelper.getHeight());
+        this.menuHelper.setImageHelper(this.canvasHelper);
+        // TODO set scrollbar 'onAction's
+    }
+
+    public void checkScrollbarVisibility(double parentWidth, double parentHeight) {
+
+        if(this.canvasHelper.getCanvas().getWidth() >= parentWidth) {
+
+            this.horizontalScroll.setVisible(true);
+            // TODO update horizontal scrollbar length
+        }
+        else this.horizontalScroll.setVisible(false);
+
+        if(this.canvasHelper.getCanvas().getHeight() >= parentHeight - this.menuHelper.getHeight()) {
+
+            this.verticalScroll.setVisible(true);
+            // TODO update vertical scrollbar length
+        }
+        else this.verticalScroll.setVisible(false);
     }
 
     /**
@@ -34,16 +56,19 @@ public class PaintController implements Initializable {
     public void setMainStage(@NotNull Stage mainStage) {
 
         this.menuHelper.setMainStage(mainStage);
-        this.imageHelper.setMainStage(mainStage);
+        this.canvasHelper.setMainStage(mainStage);
     }
 
+    /**
+     * @param toolBar
+     */
     public void setToolBar(@NotNull ToolBarPopup toolBar) {
 
         this.menuHelper.setToolBar(toolBar);
-        toolBar.setCanvas(this.imageHelper.getCanvas());
+        toolBar.setCanvas(this.canvasHelper.getCanvas());
     }
 
-    public ImageHelper getImageHelper() {
-        return this.imageHelper;
+    public CanvasHelper getCanvasHelper() {
+        return this.canvasHelper;
     }
 }

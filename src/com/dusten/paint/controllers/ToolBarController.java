@@ -13,8 +13,11 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -22,16 +25,19 @@ import java.util.ResourceBundle;
  *
  * Controller for ToolBar.fxml
  */
-// TODO add secondary color swatch
 public class ToolBarController implements Initializable {
 
     @FXML private ImageButton selectToolButton;
     @FXML private ImageButton paintBucketButton;
+    @FXML private ImageButton eyeDropperButton;
+    @FXML private ImageButton textToolButton;
     @FXML private ImageButton drawToolButton;
     @FXML private ImageButton lineToolButton;
     @FXML private ImageButton rectangleToolButton;
     @FXML private ImageButton ellipseToolButton;
-    @FXML private ColorPicker colorPicker;
+
+    @FXML private ColorPicker primaryColorPicker;
+    @FXML private ColorPicker secondaryColorPicker;
 
     private ToolSettingsPopup toolSettings;
     private ToolBarPopup parent;
@@ -44,32 +50,61 @@ public class ToolBarController implements Initializable {
 
         try{
             this.toolSettings = new ToolSettingsPopup();
+            this.toolSettings.show();
+
         } catch(Exception e) {
             e.printStackTrace();
         }
-        this.updateColorAction();
 
-        ToggleGroup buttonGroup = new ToggleGroup();
-        buttonGroup.selectedToggleProperty().addListener((value, oldToggle, newToggle) ->
-            this.nextToggle = (ImageButton)buttonGroup.getSelectedToggle()
+        this.updatePrimaryColorAction();
+        this.updateSecondaryColorAction();
+
+        ToggleGroup toolButtonGroup = new ToggleGroup();
+        toolButtonGroup.selectedToggleProperty().addListener((value, oldToggle, newToggle) ->
+            this.nextToggle = (ImageButton)toolButtonGroup.getSelectedToggle()
         );
 
-        this.selectToolButton.setToggleGroup(buttonGroup);
-        this.paintBucketButton.setToggleGroup(buttonGroup);
-        this.drawToolButton.setToggleGroup(buttonGroup);
-        this.lineToolButton.setToggleGroup(buttonGroup);
-        this.rectangleToolButton.setToggleGroup(buttonGroup);
-        this.ellipseToolButton.setToggleGroup(buttonGroup);
+        List<ImageButton> buttonList = Arrays.asList(this.selectToolButton, this.paintBucketButton, this.eyeDropperButton,
+                this.textToolButton, this.drawToolButton, this.lineToolButton, this.rectangleToolButton, this.ellipseToolButton);
+
+        for(ImageButton button : buttonList) {
+
+            button.setToggleGroup(toolButtonGroup);
+            button.setOnAction(event -> {
+                if(button.isSelected())
+                    this.toolSettings.selectTab(button.getSettingsTab());
+            });
+        }
+
+        /*
+        this.selectToolButton.setOnAction(event -> {
+            if(this.selectToolButton.isSelected())
+                this.toolSettings.selectTab("Select");
+        });
+
+        this.paintBucketButton.setOnAction(event -> {
+            if(this.paintBucketButton.isSelected())
+                this.toolSettings.selectTab("Bucket");
+        });
+
+        this.selectToolButton.setToggleGroup(toolButtonGroup);
+        this.paintBucketButton.setToggleGroup(toolButtonGroup);
+        this.eyeDropperButton.setToggleGroup(toolButtonGroup);
+        this.textToolButton.setToggleGroup(toolButtonGroup);
+        this.drawToolButton.setToggleGroup(toolButtonGroup);
+        this.lineToolButton.setToggleGroup(toolButtonGroup);
+        this.rectangleToolButton.setToggleGroup(toolButtonGroup);
+        this.ellipseToolButton.setToggleGroup(toolButtonGroup);*/
     }
 
     /**
-     * Updates the color to be used by the canvas for drawing operations
-     * and updates the tooltip for the ColorPicker component of the toolbar
+     * Updates the primary color to be used by the canvas for drawing operations
+     * and updates the tooltip for the primary ColorPicker component of the toolbar
      */
     @FXML
-    private void updateColorAction() {
+    private void updatePrimaryColorAction() {
 
-        Color colorValue = this.colorPicker.getValue();
+        Color colorValue = this.primaryColorPicker.getValue();
 
         // Show color values as integers between 0 and 255 instead of
         // doubles from 0.0 - 1.0
@@ -77,35 +112,90 @@ public class ToolBarController implements Initializable {
         int greenValue = (int)Math.ceil(colorValue.getGreen() * 255);
         int blueValue = (int)Math.ceil(colorValue.getBlue() * 255);
 
-        this.colorPicker.setTooltip(new Tooltip("Color Chooser\nCurrent: R: " + redValue + ", G: " + greenValue + ", B: " + blueValue));
+        Tooltip tooltip = new Tooltip("Primary Color:\n R: " + redValue + ", G: " + greenValue + ", B: " + blueValue);
+        this.primaryColorPicker.setTooltip(tooltip);
 
         if(this.canvas != null)
-            this.canvas.setColor(colorValue);
+            this.canvas.setPrimaryColor(colorValue);
+    }
+
+    /**
+     * Updates the secondary color to be used by the canvas for drawing operations
+     * and updates the tooltip for the secondary ColorPicker component of the toolbar
+     */
+    @FXML
+    private void updateSecondaryColorAction() {
+
+        Color colorValue = this.secondaryColorPicker.getValue();
+
+        // Show color values as integers between 0 and 255 instead of
+        // doubles from 0.0 - 1.0
+        int redValue = (int)Math.ceil(colorValue.getRed() * 255);
+        int greenValue = (int)Math.ceil(colorValue.getGreen() * 255);
+        int blueValue = (int)Math.ceil(colorValue.getBlue() * 255);
+
+        Tooltip tooltip = new Tooltip("Secondary Color:\n R: " + redValue + ", G: " + greenValue + ", B: " + blueValue);
+        this.secondaryColorPicker.setTooltip(tooltip);
+
+        if(this.canvas != null)
+            this.canvas.setSecondaryColor(colorValue);
     }
 
     /**
      * Shows the ToolBar settings popup windo
      */
     @FXML
-    public void showSettingsAction() {
+    public void toggleSettingsAction() {
 
         if(this.toolSettings == null) return;
-        this.toolSettings.showRelativeTo(this.parent);
+
+        if(this.toolSettings.isShowing())
+            this.toolSettings.hide();
+        else
+            this.toolSettings.show();
     }
 
-    public void closeSettingsWindow() {
+    /**
+     * Swaps the primary and secondary color values
+     */
+    @FXML
+    private void swapColorsAction() {
 
-        if(this.toolSettings == null) return;
-        this.toolSettings.close();
+        Color primary = this.primaryColorPicker.getValue();
+        Color secondary = this.secondaryColorPicker.getValue();
+
+        this.primaryColorPicker.setValue(secondary);
+        this.secondaryColorPicker.setValue(primary);
+
+        this.updatePrimaryColorAction();
+        this.updateSecondaryColorAction();
     }
 
+    /**
+     *
+     * @param canvas
+     */
     public void setCanvas(@NotNull DrawableCanvas canvas) {
 
         this.canvas = canvas;
-        this.canvas.setColor(this.colorPicker.getValue());
+
+        this.canvas.setPrimaryColor(this.primaryColorPicker.getValue());
+        this.canvas.setSecondaryColor(this.secondaryColorPicker.getValue());
 
         if(this.toolSettings != null)
             this.toolSettings.setCanvas(this.canvas);
+
+        this.canvas.setOnPrimaryColorChanged(color -> {
+
+            this.primaryColorPicker.setValue(color);
+            this.updatePrimaryColorAction();
+        });
+
+        this.canvas.setOnSecondaryColorChanged(color -> {
+
+            this.secondaryColorPicker.setValue(color);
+            this.updateSecondaryColorAction();
+        });
 
         this.canvas.setOnMouseEntered(event -> {
 
@@ -126,6 +216,10 @@ public class ToolBarController implements Initializable {
         );
     }
 
+    /**
+     * 
+     * @param parent
+     */
     public void setParent(@NotNull ToolBarPopup parent) {
 
         this.parent = parent;
@@ -148,5 +242,13 @@ public class ToolBarController implements Initializable {
 
     public void setDrawToolMode(@NotNull ToolsEnum toolType) {
         this.drawToolButton.setEnumToolType(toolType, this.canvas);
+    }
+
+    public void setLineToolMode(@NotNull ToolsEnum toolType) {
+        this.lineToolButton.setEnumToolType(toolType, this.canvas);
+    }
+
+    public Stage getSettingsWindow() {
+        return this.toolSettings;
     }
 }

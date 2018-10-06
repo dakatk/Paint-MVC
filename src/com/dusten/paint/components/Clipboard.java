@@ -1,6 +1,6 @@
 package com.dusten.paint.components;
 
-import com.dusten.paint.components.primitives.Rectangle;
+import com.dusten.paint.primitives.Rectangle;
 import com.dusten.paint.operators.MoveOperator;
 import javafx.scene.image.Image;
 

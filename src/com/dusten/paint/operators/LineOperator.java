@@ -1,8 +1,8 @@
 package com.dusten.paint.operators;
 
+import com.dusten.paint.primitives.Line;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Line;
 
 /**
  * @author Dusten Knull
@@ -22,7 +22,7 @@ public class LineOperator implements PaintOperator {
     public LineOperator(Line line, double lineWeight) {
 
         this.lineWeight = lineWeight;
-        this.paint = line.getStroke();
+        this.paint = line.getPaint();
 
         this.x0 = line.getStartX();
         this.y0 = line.getStartY();

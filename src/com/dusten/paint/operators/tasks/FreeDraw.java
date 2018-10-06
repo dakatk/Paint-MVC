@@ -9,7 +9,6 @@ import javafx.scene.paint.Paint;
 import java.awt.*;
 import java.util.ArrayList;
 
-// TODO fix fill commands
 public class FreeDraw extends Task<Void> {
 
     private ArrayList<Point> drawPoints;

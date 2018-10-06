@@ -7,12 +7,17 @@ import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
 
+/**
+ * @author Dusten Knull
+ */
 public class ToolSettingsPopup extends PopupWindow<ToolSettingsController> {
 
     public ToolSettingsPopup() throws IOException {
-
         super("Toolbar Settings", FilesEnum.TOOLSETTINGS_FXML);
-        this.setShowOffset(80.0, 10.0);
+    }
+
+    public void selectTab(@NotNull String tabName) {
+        this.controller.selectTab(tabName);
     }
 
     public void setToolBar(@NotNull ToolBarPopup toolBar) {

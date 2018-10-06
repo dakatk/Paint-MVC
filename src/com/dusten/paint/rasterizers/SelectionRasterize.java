@@ -1,6 +1,6 @@
-package com.dusten.paint.components.rasterizers;
+package com.dusten.paint.rasterizers;
 
-import com.dusten.paint.components.primitives.Rectangle;
+import com.dusten.paint.primitives.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -16,16 +16,19 @@ public class SelectionRasterize {
     private static final double DASH_OFFSET = 5.0;
 
     private Rectangle selectedArea;
+    private Point moveTo, clickAt;
     private Image sourceImage;
-    private Point moveTo;
 
     private boolean hasSelected;
 
     public SelectionRasterize() {
 
         this.selectedArea = new Rectangle();
-        this.selectedArea.setPaint(Color.LIGHTGRAY);
+        this.selectedArea.setPaint(Color.GRAY);
+
+        this.clickAt = new Point();
         this.moveTo = new Point();
+
         this.hasSelected = false;
     }
 
@@ -34,17 +37,22 @@ public class SelectionRasterize {
      * @param x
      * @param y
      */
-    public void setSelectedRectangle(double x, double y) {
+    public void setSelectedRectangle(GraphicsContext context, double x, double y) {
 
         this.selectedArea.setX(x);
         this.selectedArea.setY(y);
-        this.selectedArea.setWidth(0.0);
-        this.selectedArea.setHeight(0.0);
+
+        this.renderSelectedRectangle(context, x, y);
     }
 
-    public void setMoveSelection(Image sourceImage) {
+    public void setMoveSelection(Image sourceImage, double x, double y) {
 
         if(!this.hasSelected)
+            return;
+
+        if(this.selectedArea.inside(x, y))
+            this.clickAt.setLocation(x, y);
+        else
             return;
 
         this.sourceImage = sourceImage;
@@ -85,20 +93,36 @@ public class SelectionRasterize {
         this.hasSelected = true;
     }
 
-    public void renderMoveSelection(GraphicsContext context, double x, double y) {
+    /**
+     *
+     * @param context
+     * @param x
+     * @param y
+     * @param cut
+     */
+    public void renderMoveSelection(GraphicsContext context, Paint background, double x, double y, boolean cut) {
 
         if(this.sourceImage == null)
             return;
 
-        this.moveTo.setLocation(x, y);
+        this.moveTo.setLocation(x - this.clickAt.getX(), y - this.clickAt.getY());
 
         double sourceX = this.selectedArea.getX();
         double sourceY = this.selectedArea.getY();
         double sourceW = this.selectedArea.getWidth();
         double sourceH = this.selectedArea.getHeight();
 
-        context.clearRect(sourceX, sourceY, sourceW, sourceH);
-        context.drawImage(this.sourceImage, sourceX, sourceY, sourceW, sourceH, x, y, sourceW, sourceH);
+        if(cut) {
+
+            Paint fill = context.getFill();
+
+            context.setFill(background);
+            context.fillRect(sourceX, sourceY, sourceW, sourceH);
+
+            context.setFill(fill);
+        }
+        context.drawImage(this.sourceImage, sourceX, sourceY, sourceW, sourceH,
+                this.moveTo.getX(), this.moveTo.getY(), sourceW, sourceH);
     }
 
     public Image getSourceImage() {

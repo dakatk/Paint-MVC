@@ -9,5 +9,9 @@
 }
 
 .colorChooser {
-    -fx-background-color: transparent;
+    -fx-background-color: null;
+}
+
+.colorChooser:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0.0, 0, 0);
 }

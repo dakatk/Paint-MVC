@@ -1,6 +1,6 @@
 package com.dusten.paint.controllers;
 
-import com.dusten.paint.helpers.ImageHelper;
+import com.dusten.paint.helpers.CanvasHelper;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.dusten.paint.popup.ResizePopup;
 import com.sun.istack.internal.NotNull;
@@ -29,7 +29,7 @@ public class MenuController implements Initializable {
     @FXML private MenuItem pasteMenu;
 
     private ResizePopup resizePopup;
-    private ImageHelper imageHelper;
+    private CanvasHelper canvasHelper;
     private ToolBarPopup toolBar;
     private Stage mainStage;
 
@@ -50,8 +50,8 @@ public class MenuController implements Initializable {
     @FXML
     private void loadAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.loadImage();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.loadImage();
     }
 
     /**
@@ -61,8 +61,8 @@ public class MenuController implements Initializable {
     @FXML
     private void saveAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.saveImage();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.saveImage();
     }
 
     /**
@@ -72,8 +72,8 @@ public class MenuController implements Initializable {
     @FXML
     private void saveAsAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.saveImageAs();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.saveImageAs();
     }
 
     /**
@@ -97,7 +97,7 @@ public class MenuController implements Initializable {
     private void resizeAction() {
 
         if(this.resizePopup == null) return;
-        this.resizePopup.showAsPopup(this.imageHelper.getController());
+        this.resizePopup.showAsPopup(this.canvasHelper.getController());
     }
 
     /**
@@ -107,8 +107,8 @@ public class MenuController implements Initializable {
     @FXML
     private void clearCanvasAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.clearCanvas();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.clearCanvas();
     }
 
     /**
@@ -118,8 +118,8 @@ public class MenuController implements Initializable {
     @FXML
     private void undoAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.undoEdit();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.undoEdit();
 
         if(this.redoMenu.isDisable())
             this.redoMenu.setDisable(false);
@@ -132,8 +132,8 @@ public class MenuController implements Initializable {
     @FXML
     private void redoAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.redoEdit();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.redoEdit();
 
         if(this.undoMenu.isDisable())
             this.undoMenu.setDisable(false);
@@ -145,9 +145,9 @@ public class MenuController implements Initializable {
     @FXML
     private void copyAction() {
 
-        if(this.imageHelper == null) return;
+        if(this.canvasHelper == null) return;
 
-        this.imageHelper.copySelectedArea();
+        this.canvasHelper.copySelectedArea();
         this.pasteMenu.setDisable(false);
     }
 
@@ -157,9 +157,9 @@ public class MenuController implements Initializable {
     @FXML
     private void cutAction() {
 
-        if(this.imageHelper == null) return;
+        if(this.canvasHelper == null) return;
 
-        this.imageHelper.cutSelectedArea();
+        this.canvasHelper.cutSelectedArea();
         this.pasteMenu.setDisable(false);
     }
 
@@ -169,9 +169,9 @@ public class MenuController implements Initializable {
     @FXML
     private void pasteAction() {
 
-        if(this.imageHelper == null) return;
+        if(this.canvasHelper == null) return;
 
-        this.imageHelper.pasteClipboard();
+        this.canvasHelper.pasteClipboard();
         this.pasteMenu.setDisable(true);
     }
 
@@ -181,8 +181,8 @@ public class MenuController implements Initializable {
     @FXML
     private void selectAllAction() {
 
-        if(this.imageHelper == null) return;
-        this.imageHelper.selectAll();
+        if(this.canvasHelper == null) return;
+        this.canvasHelper.selectAll();
     }
 
     /**
@@ -192,7 +192,7 @@ public class MenuController implements Initializable {
     private void showToolbarAction() {
 
         if(this.toolBar == null) return;
-        this.toolBar.showRelativeTo(this.mainStage);
+        this.toolBar.show();
 
         this.hideToolsMenu.setDisable(false);
         this.showToolsMenu.setDisable(true);
@@ -218,7 +218,7 @@ public class MenuController implements Initializable {
     private void showToolSettingsAction() {
 
         if(this.toolBar == null) return;
-        this.toolBar.showSettingsWindow();
+        this.toolBar.toggleSettingsWindow();
     }
 
     /**
@@ -239,12 +239,19 @@ public class MenuController implements Initializable {
 
     /**
      *
-     * @param imageHelper
+     * @param canvasHelper ImageHelper object
      */
-    public void setImageHelper(@NotNull ImageHelper imageHelper) {
+    public void setCanvasHelper(@NotNull CanvasHelper canvasHelper) {
 
-        this.imageHelper = imageHelper;
-        this.imageHelper.setUpdateStatusCall(this.saveMenu, this.saveAsMenu, this.undoMenu, this.redoMenu);
+        this.canvasHelper = canvasHelper;
+        this.canvasHelper.setUpdateStatusCall(status -> {
+
+            this.saveMenu.setDisable(status);
+            this.saveAsMenu.setDisable(status);
+
+            undoMenu.setDisable(this.canvasHelper.getCanvas().isUndoDisabled());
+            redoMenu.setDisable(this.canvasHelper.getCanvas().isRedoDisabled());
+        });
     }
 
     public void setMainStage(@NotNull Stage mainStage) {

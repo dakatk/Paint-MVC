@@ -1,14 +1,13 @@
 package com.dusten.paint.helpers;
 
 import com.dusten.paint.components.DrawableCanvas;
-import com.dusten.paint.controllers.ImageController;
+import com.dusten.paint.controllers.CanvasController;
 import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
 import com.dusten.paint.main.PaintApp;
 import com.dusten.paint.popup.MessagePopup;
 import com.sun.istack.internal.NotNull;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.StackPane;
@@ -29,9 +28,9 @@ import java.util.List;
  * An ImageView component with helper functions for loading and saving an image in
  * the 'File' menu
  */
-public class ImageHelper extends StackPane implements SaveStatus {
+public class CanvasHelper extends StackPane {
 
-    private ImageController controller;
+    private CanvasController controller;
     private Stage mainStage;
 
     private FileChooser fileChooser;
@@ -40,9 +39,9 @@ public class ImageHelper extends StackPane implements SaveStatus {
 
     private StatusSet<Boolean> status;
 
-    public ImageHelper() throws IOException {
+    public CanvasHelper() throws IOException {
 
-        FXMLParser<ImageController, StackPane> fxmlParser = new FXMLParser<>(FilesEnum.IMAGEHELPER_FXML);
+        FXMLParser<CanvasController, StackPane> fxmlParser = new FXMLParser<>(FilesEnum.IMAGEHELPER_FXML);
         StackPane parent = fxmlParser.getParent();
 
         this.controller = fxmlParser.getController();
@@ -61,42 +60,26 @@ public class ImageHelper extends StackPane implements SaveStatus {
         this.getChildren().addAll(parent.getChildren());
     }
 
-    @Override
-    public void setUpdateStatusCall(@NotNull MenuItem saveMenu, @NotNull MenuItem saveAsMenu,
-                             @NotNull MenuItem undoMenu, @NotNull MenuItem redoMenu) {
+    /**
+     *
+     * @param saved
+     */
+    public void updateSaveStatus(boolean saved) {
 
-        this.status = (status) -> {
+        // default string to show when no file is loaded
+        String openedName = "<Untitled>";
 
-            // default string to show when no file is loaded
-            String openedName = "<Untitled>";
+        if(this.opened != null)
+            openedName = this.opened.getName();
 
-            if(ImageHelper.this.opened != null)
-                openedName = ImageHelper.this.opened.getName();
+        String title = PaintApp.TITLE + " - " + openedName;
 
-            String title = PaintApp.TITLE + " - " + openedName;
+        if(!saved)
+            this.mainStage.setTitle(title + "*");
+        else
+            this.mainStage.setTitle(title);
 
-            if(!status)
-                ImageHelper.this.mainStage.setTitle(title + "*");
-            else
-                ImageHelper.this.mainStage.setTitle(title);
-
-            if(saveMenu != null && saveAsMenu != null) {
-
-                saveMenu.setDisable(status);
-                saveAsMenu.setDisable(status);
-            }
-
-            if(redoMenu != null && undoMenu != null) {
-
-                undoMenu.setDisable(ImageHelper.this.controller.getCanvas().isUndoDisabled());
-                redoMenu.setDisable(ImageHelper.this.controller.getCanvas().isRedoDisabled());
-            }
-        };
-    }
-
-    @Override
-    public StatusSet<Boolean> getUpdateStatusCall() {
-        return this.status;
+        this.status.set(saved);
     }
 
     /**
@@ -274,6 +257,10 @@ public class ImageHelper extends StackPane implements SaveStatus {
         this.controller.getCanvas().redoEdit();
     }
 
+    public void setUpdateStatusCall(@NotNull StatusSet<Boolean> status) {
+        this.status = status;
+    }
+
     public void setMainStage(@NotNull Stage mainStage) {
         this.mainStage = mainStage;
     }
@@ -282,7 +269,7 @@ public class ImageHelper extends StackPane implements SaveStatus {
         return !this.controller.isSaved();
     }
 
-    public ImageController getController() {
+    public CanvasController getController() {
         return this.controller;
     }
 

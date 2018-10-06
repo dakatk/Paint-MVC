@@ -1,4 +1,4 @@
-package com.dusten.paint.components.primitives;
+package com.dusten.paint.primitives;
 
 import com.sun.istack.internal.NotNull;
 import javafx.scene.paint.Paint;
@@ -35,6 +35,13 @@ public class Rectangle {
 
         this.x = x;
         this.y = y;
+    }
+
+    public boolean inside(double x, double y) {
+
+        return this.width > 0 && this.height > 0 &&
+                x >= this.x && x < this.x + this.width &&
+                x >= this.y && y < this.y + this.height;
     }
 
     public void setPaint(@NotNull Paint paint) {

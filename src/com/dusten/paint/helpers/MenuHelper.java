@@ -36,7 +36,7 @@ public class MenuHelper extends MenuBar {
         this.controller.setMainStage(mainStage);
     }
 
-    public void setImageHelper(@NotNull ImageHelper imageHelper) {
-        this.controller.setImageHelper(imageHelper);
+    public void setImageHelper(@NotNull CanvasHelper canvasHelper) {
+        this.controller.setCanvasHelper(canvasHelper);
     }
 }

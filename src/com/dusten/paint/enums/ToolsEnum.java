@@ -9,11 +9,12 @@ import javafx.scene.Cursor;
  * Descriptors for the higher level values for each tool
  * (currently the icon, tooltip, and mouse cursor). These objects
  * are also used to differentiate between which tool is
- * currently active (e.g., 'toolType.equals(ToolsEnum.LINE)')
+ * currently active
  */
 public enum ToolsEnum {
 
     LINE(FilesEnum.LINETOOL_ICON, Cursor.CROSSHAIR, "Line Tool"),
+    ARC(FilesEnum.ARCTOOL_ICON, Cursor.CROSSHAIR, "Arc Tool"),
     BUCKET(FilesEnum.PAINTBUCKET_ICON, CustomCursor.BUCKET, "Paint Bucket Tool"),
     PENCIL(FilesEnum.PENCILTOOL_ICON, CustomCursor.PENCIL, "Pencil Tool"),
     PAINTBRUSH(FilesEnum.PAINTBRUSHTOOL_ICON, CustomCursor.BRUSH, "Paintbrush Tool"),
@@ -22,7 +23,10 @@ public enum ToolsEnum {
     ELLIPSE_FILL(FilesEnum.ELLIPSEFILLTOOL_ICON, Cursor.CROSSHAIR, "Fill Ellipse Tool"),
     ELLIPSE_DRAW(FilesEnum.ELLIPSEDRAWTOOL_ICON, Cursor.CROSSHAIR, "Draw Ellipse Tool"),
     SELECT_AREA(FilesEnum.SELECTTOOL_ICON, Cursor.CROSSHAIR, "Selection Tool"),
-    MOVE_AREA(FilesEnum.MOVETOOL_ICON, Cursor.CROSSHAIR, "Move Selection Tool");
+    MOVE_AREA(FilesEnum.MOVETOOL_ICON, CustomCursor.MOVE, "Move Selection Tool"),
+    ERASER(FilesEnum.ERASERTOOL_ICON, CustomCursor.ERASER, "Eraser Tool"),
+    EYEDROPPER(FilesEnum.EYEDROPPERTOOL_ICON, CustomCursor.EYEDROPPER, "Color Picker Tool"),
+    TEXT(FilesEnum.TEXTTOOL_ICON, Cursor.TEXT, "Text Tool");
 
     private FilesEnum iconURL;
     private String tooltip;

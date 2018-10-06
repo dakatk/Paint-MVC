@@ -9,6 +9,8 @@ import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -17,7 +19,6 @@ import javafx.stage.Stage;
  * The main class for this project, also doubles as the controller for
  * the main FXML file (specified as 'PaintApp.fxml')
  */
-// TODO clean up controller <-> model references
 public class PaintApp extends Application {
 
     public static final String TITLE = "Pain(t)";
@@ -30,10 +31,17 @@ public class PaintApp extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         FXMLParser<PaintController, Parent> fxmlParser = new FXMLParser<>(FilesEnum.MAIN_FXML);
-        ToolBarPopup toolBar = new ToolBarPopup();
-
         PaintController controller = fxmlParser.getController();
+
         Scene scene = new Scene(fxmlParser.getParent(), WIDTH, HEIGHT);
+        ToolBarPopup toolBarPopup = new ToolBarPopup();
+
+        scene.addEventHandler(MouseEvent.ANY, (event) -> {
+
+            toolBarPopup.toBack();
+            toolBarPopup.getSettingsWindow().toBack();
+            primaryStage.requestFocus();
+        });
 
         // TODO add scrollbars if canvas size exceeds window size
         primaryStage.setTitle(TITLE + " - <Untitled>");
@@ -41,19 +49,19 @@ public class PaintApp extends Application {
         primaryStage.setMinHeight(MIN_HEIGHT);
 
         primaryStage.setScene(scene);
-        toolBar.setParentScene(scene);
+        toolBarPopup.setParentScene(scene);
 
-        primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
-            // TODO check canvas width adjustment
-        });
+        primaryStage.widthProperty().addListener((observable, oldValue, newValue) ->
+            controller.checkScrollbarVisibility(primaryStage.getWidth(), primaryStage.getHeight())
+        );
 
-        primaryStage.heightProperty().addListener((observable, oldValue, newValue) -> {
-            // TODO check canvas height adjustment
-        });
+        primaryStage.heightProperty().addListener((observable, oldValue, newValue) ->
+            controller.checkScrollbarVisibility(primaryStage.getWidth(), primaryStage.getHeight())
+        );
 
         primaryStage.setOnCloseRequest(event -> {
 
-            if(controller.getImageHelper().hasNotSaved()) {
+            if(controller.getCanvasHelper().hasNotSaved()) {
 
                 // Queries the user to save on close if they have not saved recently
                 ButtonType saveQuery = MessagePopup.showAsQueryAndWait("Save before closing?");
@@ -64,23 +72,51 @@ public class PaintApp extends Application {
                 else {
 
                     if(saveQuery.equals(ButtonType.OK))
-                        controller.getImageHelper().saveImage();
+                        controller.getCanvasHelper().saveImage();
 
-                    toolBar.close();
-                    toolBar.closeSettingsWindow();
+                    toolBarPopup.close();
+                    toolBarPopup.getSettingsWindow().close();
                 }
-            } else {
+            }
+            else {
 
-                toolBar.close();
-                toolBar.closeSettingsWindow();
+                toolBarPopup.close();
+                toolBarPopup.getSettingsWindow().close();
             }
         });
 
+        primaryStage.setOnHidden(event -> {
+
+            toolBarPopup.hide();
+            toolBarPopup.getSettingsWindow().hide();
+        });
+
+        primaryStage.setOnShown(event -> {
+
+            toolBarPopup.show();
+            toolBarPopup.getSettingsWindow().show();
+        });
+
         controller.setMainStage(primaryStage);
-        controller.setToolBar(toolBar);
+        controller.setToolBar(toolBarPopup);
 
         primaryStage.show();
-        toolBar.showRelativeTo(primaryStage);
+        toolBarPopup.show();
+
+        this.setLayoutUI(toolBarPopup, toolBarPopup.getSettingsWindow(), primaryStage);
+    }
+
+    private void setLayoutUI(Stage leftWindow, Stage topWindow, Stage centerWindow) {
+
+        topWindow.setX(0.0);
+        topWindow.setY(24.0);
+        topWindow.setWidth(Screen.getPrimary().getVisualBounds().getWidth());
+
+        leftWindow.setX(0.0);
+        leftWindow.setY(topWindow.getHeight() + 25.0);
+
+        centerWindow.setX(leftWindow.getWidth() + 25.0);
+        centerWindow.setY(topWindow.getHeight() + 40.0);
     }
 
     public static void main(String[] args) {
