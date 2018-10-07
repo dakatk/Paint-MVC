@@ -70,7 +70,7 @@ public class PaintController implements Initializable {
     }
 
     /**
-     * @param toolBar
+     * @param toolBar The main ToolBarPopup object to be used with the program's menu options
      */
     public void setToolBar(@NotNull ToolBarPopup toolBar) {
 

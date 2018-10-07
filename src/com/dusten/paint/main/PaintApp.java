@@ -104,6 +104,8 @@ public class PaintApp extends Application {
         toolBarPopup.show();
 
         this.setLayoutUI(toolBarPopup, toolBarPopup.getSettingsWindow(), primaryStage);
+
+        System.out.println(primaryStage.getWidth()+","+primaryStage.getHeight());
     }
 
     private void setLayoutUI(Stage leftWindow, Stage topWindow, Stage centerWindow) {
