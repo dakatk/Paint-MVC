@@ -30,7 +30,17 @@ public class PaintController implements Initializable {
 
         this.canvasHelper.setLayoutY(this.menuHelper.getHeight());
         this.menuHelper.setImageHelper(this.canvasHelper);
-        // TODO set scrollbar 'onAction's
+
+        this.verticalScroll.setMin(0);
+        this.horizontalScroll.setMin(0);
+
+        this.verticalScroll.setOnScroll(event -> {
+            // TODO adjust canvasHelper position
+        });
+
+        this.horizontalScroll.setOnScroll(event -> {
+            // TODO adjust canvasHelper position
+        });
     }
 
     public void checkScrollbarVisibility(double parentWidth, double parentHeight) {
