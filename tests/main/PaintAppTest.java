@@ -3,6 +3,8 @@ package main;
 import com.dusten.paint.controllers.PaintController;
 import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
+import com.dusten.paint.helpers.CanvasHelper;
+import com.dusten.paint.helpers.MenuHelper;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -55,5 +57,15 @@ public class PaintAppTest extends ApplicationTest {
 
         assertNotNull(this.controller);
         assertNotNull(this.parent);
+    }
+
+    @Test
+    public void testComponentsExist() {
+
+        CanvasHelper canvasHelper = lookup("#canvasHelper").queryAs(CanvasHelper.class);
+        MenuHelper menuHelper = lookup("#menuHelper").queryAs(MenuHelper.class);
+
+        assertNotNull(canvasHelper);
+        assertNotNull(menuHelper);
     }
 }
