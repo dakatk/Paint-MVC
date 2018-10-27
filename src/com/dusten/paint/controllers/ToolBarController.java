@@ -48,7 +48,7 @@ public class ToolBarController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        try{
+        try {
             this.toolSettings = new ToolSettingsPopup();
             this.toolSettings.show();
 
@@ -75,26 +75,6 @@ public class ToolBarController implements Initializable {
                     this.toolSettings.selectTab(button.getSettingsTab());
             });
         }
-
-        /*
-        this.selectToolButton.setOnAction(event -> {
-            if(this.selectToolButton.isSelected())
-                this.toolSettings.selectTab("Select");
-        });
-
-        this.paintBucketButton.setOnAction(event -> {
-            if(this.paintBucketButton.isSelected())
-                this.toolSettings.selectTab("Bucket");
-        });
-
-        this.selectToolButton.setToggleGroup(toolButtonGroup);
-        this.paintBucketButton.setToggleGroup(toolButtonGroup);
-        this.eyeDropperButton.setToggleGroup(toolButtonGroup);
-        this.textToolButton.setToggleGroup(toolButtonGroup);
-        this.drawToolButton.setToggleGroup(toolButtonGroup);
-        this.lineToolButton.setToggleGroup(toolButtonGroup);
-        this.rectangleToolButton.setToggleGroup(toolButtonGroup);
-        this.ellipseToolButton.setToggleGroup(toolButtonGroup);*/
     }
 
     /**

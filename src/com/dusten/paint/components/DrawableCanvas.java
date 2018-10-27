@@ -28,6 +28,9 @@ import java.util.List;
 
 /**
  * @author Dusten Knull
+ *
+ * Component class based on the JavaFX {@link Canvas} component with
+ * specific rules and events made to be useful specifically for Paint-MVC
  */
 public class DrawableCanvas extends Canvas {
 
@@ -35,6 +38,7 @@ public class DrawableCanvas extends Canvas {
     public static final double DEFAULT_LINE_WEIGHT = 2.0;
     public static final double DEFAULT_FONT_WEIGHT = 10.0;
 
+    // Rasterizer objects which draw previews for certain tools
     private SelectionRasterize selectionRasterize;
     private FreeDrawRasterize freeDrawRasterize;
     private ShapeRasterize shapeRasterize;
@@ -45,6 +49,7 @@ public class DrawableCanvas extends Canvas {
     private Clipboard clipboard;
     private ToolsEnum toolType;
 
+    // Edit history snd current edit index for use with undo/redo
     private List<PaintOperator> editHistory;
     private int editIndex;
 
@@ -351,7 +356,7 @@ public class DrawableCanvas extends Canvas {
     /**
      * Adds an operator to the edit history
      *
-     * @param edit Operator to add to history
+     * @param edit {@link PaintOperator} implementation instance to add to history
      */
     private void addEdit(PaintOperator edit) {
 
@@ -366,7 +371,7 @@ public class DrawableCanvas extends Canvas {
 
     /**
      * Redraws the entire edit history while preserving current
-     * GraphicsContext status
+     * {@link GraphicsContext} status
      */
     private void redraw() {
 
@@ -389,8 +394,8 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     * "Un-does" the most recent edit by moving the edit history
-     * index back one, if applicable (DOES NOT remove the PaintOperator
+     * "Un-does" the most recent edit by moving the edit history index back one,
+     * if applicable (DOES NOT remove the {@link PaintOperator}
      * from the edit history list)
      */
     public void undoEdit() {
@@ -420,7 +425,7 @@ public class DrawableCanvas extends Canvas {
     /**
      * Copy or cut the selected area to the clipboard
      *
-     * @param cut Whether or not to cut the current slection when copying
+     * @param cut Whether or not to cut the current selection when copying
      */
     public void copySelectedArea(boolean cut) {
 
@@ -465,7 +470,7 @@ public class DrawableCanvas extends Canvas {
     }
 
     /**
-     * @return Snapshot of the current canvas as an image
+     * @return Snapshot of the current canvas as a {@link WritableImage}
      */
     public WritableImage getSnapshot() {
 
@@ -480,7 +485,7 @@ public class DrawableCanvas extends Canvas {
     /**
      * Loads a new image for the background and clears edit history
      *
-     * @param image The new image to be loaded
+     * @param image The new {@link Image} to be loaded
      */
     public void loadImage(@NotNull Image image) {
 

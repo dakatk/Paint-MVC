@@ -83,10 +83,6 @@ public class IntegerField extends TextField {
         this.setText(String.valueOf(newValue));
     }
 
-    public void setOnUpdateCall(Callable<Void> onUpdate) {
-        this.onUpdate = onUpdate;
-    }
-
     /**
      * @return True when the field value is greater than or equal to MAX_VALUE, otherwise false
      */
@@ -99,6 +95,10 @@ public class IntegerField extends TextField {
      */
     public boolean atMinValue() {
         return this.value.getValue() <= MIN_VALUE;
+    }
+
+    public void setOnUpdateCall(Callable<Void> onUpdate) {
+        this.onUpdate = onUpdate;
     }
 
     public int getValue() {

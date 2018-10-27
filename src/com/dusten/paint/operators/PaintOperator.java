@@ -6,7 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
  * @author Dusten Knull
  *
  * Interface that serves as a template for all operators that are registerd
- * as image edits (e.g., the Line Tool, Paint Bucket Tool, etc.)
+ * as image edits (e.g., {@link LineOperator}, {@link BucketOperator}, etc.)
  */
 public interface PaintOperator {
 

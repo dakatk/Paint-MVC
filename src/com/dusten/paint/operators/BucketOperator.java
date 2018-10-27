@@ -29,7 +29,9 @@ public class BucketOperator implements PaintOperator {
         this.result = new WritableImage((int)canvasImage.getWidth(), (int)canvasImage.getHeight());
         this.subroutine = new BucketFill(this.result, canvasImage, paint, epsilon, mouseX, mouseY);
 
-        new Thread(this.subroutine).start();
+       // synchronized(this){
+            new Thread(this.subroutine).start();
+        //}
     }
 
     @Override
