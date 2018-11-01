@@ -42,6 +42,7 @@ public class ToolBarController implements Initializable {
     private ToolSettingsPopup toolSettings;
     private ToolBarPopup parent;
 
+    private List<ImageButton> buttonList;
     private DrawableCanvas canvas;
     private ImageButton nextToggle;
 
@@ -64,10 +65,10 @@ public class ToolBarController implements Initializable {
             this.nextToggle = (ImageButton)toolButtonGroup.getSelectedToggle()
         );
 
-        List<ImageButton> buttonList = Arrays.asList(this.selectToolButton, this.paintBucketButton, this.eyeDropperButton,
+        this.buttonList = Arrays.asList(this.selectToolButton, this.paintBucketButton, this.eyeDropperButton,
                 this.textToolButton, this.drawToolButton, this.lineToolButton, this.rectangleToolButton, this.ellipseToolButton);
 
-        for(ImageButton button : buttonList) {
+        for(ImageButton button : this.buttonList) {
 
             button.setToggleGroup(toolButtonGroup);
             button.setOnAction(event -> {
@@ -122,20 +123,6 @@ public class ToolBarController implements Initializable {
     }
 
     /**
-     * Shows the ToolBar settings popup windo
-     */
-    @FXML
-    public void toggleSettingsAction() {
-
-        if(this.toolSettings == null) return;
-
-        if(this.toolSettings.isShowing())
-            this.toolSettings.hide();
-        else
-            this.toolSettings.show();
-    }
-
-    /**
      * Swaps the primary and secondary color values
      */
     @FXML
@@ -152,8 +139,7 @@ public class ToolBarController implements Initializable {
     }
 
     /**
-     *
-     * @param canvas
+     * @param canvas Canvas object to be used when updating color values via the toolbar
      */
     public void setCanvas(@NotNull DrawableCanvas canvas) {
 
@@ -197,8 +183,36 @@ public class ToolBarController implements Initializable {
     }
 
     /**
-     * 
-     * @param parent
+     *
+     */
+    public void toggleSettings() {
+
+        if(this.toolSettings == null)
+            return;
+
+        if(this.toolSettings.isShowing())
+            this.toolSettings.hide();
+        else
+            this.toolSettings.show();
+    }
+
+    /**
+     * @param toolType
+     */
+    public void selectTool(ToolsEnum toolType) {
+
+        for(ImageButton button : this.buttonList) {
+
+            if(button.getEnumToolType().equals(toolType)) {
+
+                button.setSelected(true);
+                break;
+            }
+        }
+    }
+
+    /**
+     * @param parent ToolBar object
      */
     public void setParent(@NotNull ToolBarPopup parent) {
 
@@ -209,23 +223,33 @@ public class ToolBarController implements Initializable {
     }
 
     public void setSelectToolMode(@NotNull ToolsEnum toolType) {
+
         this.selectToolButton.setEnumToolType(toolType, this.canvas);
+        this.selectToolButton.setSelected(true);
     }
 
     public void setRectangleToolMode(@NotNull ToolsEnum toolType) {
+
         this.rectangleToolButton.setEnumToolType(toolType, this.canvas);
+        this.rectangleToolButton.setSelected(true);
     }
 
     public void setEllipseToolMode(@NotNull ToolsEnum toolType) {
+
         this.ellipseToolButton.setEnumToolType(toolType, this.canvas);
+        this.ellipseToolButton.setSelected(true);
     }
 
     public void setDrawToolMode(@NotNull ToolsEnum toolType) {
+
         this.drawToolButton.setEnumToolType(toolType, this.canvas);
+        this.drawToolButton.setSelected(true);
     }
 
     public void setLineToolMode(@NotNull ToolsEnum toolType) {
+
         this.lineToolButton.setEnumToolType(toolType, this.canvas);
+        this.lineToolButton.setSelected(true);
     }
 
     public Stage getSettingsWindow() {

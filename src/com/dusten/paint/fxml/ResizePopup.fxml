@@ -11,7 +11,8 @@
     </padding>
 
     <Label GridPane.columnSpan="4" GridPane.rowIndex="1">Canvas Width:</Label>
-    <IntegerField fx:id="widthInput" prefWidth="100.0" promptText="Width" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <IntegerField fx:id="widthInput" prefWidth="100.0" promptText="Width" maxValue="10000"
+                  minValue="10" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
     <Button fx:id="widthInc" onAction="#incrementWidth" GridPane.columnIndex="2" GridPane.rowIndex="1">+</Button>
     <Button fx:id="widthDec" onAction="#decrementWidth" GridPane.columnIndex="3" GridPane.rowIndex="1">-</Button>

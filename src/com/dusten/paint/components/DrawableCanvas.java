@@ -36,7 +36,7 @@ public class DrawableCanvas extends Canvas {
 
     public static final double DEFAULT_FILL_TOLERANCE = 0.1;
     public static final double DEFAULT_LINE_WEIGHT = 2.0;
-    public static final double DEFAULT_FONT_WEIGHT = 10.0;
+    private static final double DEFAULT_FONT_WEIGHT = 10.0;
 
     // Rasterizer objects which draw previews for certain tools
     private SelectionRasterize selectionRasterize;
@@ -66,9 +66,11 @@ public class DrawableCanvas extends Canvas {
     private double fillTolerance;
     private double lineWeight;
     private boolean isPasted;
+    private boolean canClear;
 
     public DrawableCanvas() {
 
+        this.canClear = true;
         this.fillTolerance = DEFAULT_FILL_TOLERANCE;
         this.lineWeight = DEFAULT_LINE_WEIGHT;
         this.fontWeight = DEFAULT_FONT_WEIGHT;
@@ -511,8 +513,10 @@ public class DrawableCanvas extends Canvas {
     public void clearAll() {
 
         // Checks for previous operand to have been 'clear' so as to avoid spam
-        if(editIndex >= 0 && this.editHistory.get(editIndex) instanceof ClearOperator)
+        if(!this.canClear)
             return;
+
+        this.canClear = false;
 
         this.addEdit(new ClearOperator(this.secondaryColor, this.getWidth(), this.getHeight()));
     }
@@ -555,7 +559,9 @@ public class DrawableCanvas extends Canvas {
     }
 
     public void setOnSecondaryColorChanged(@NotNull StatusSet<Color> secondaryColorChanged) {
+
         this.secondaryColorChanged = secondaryColorChanged;
+        this.canClear = true;
     }
 
     public void setCanvasController(@NotNull CanvasController canvasController) {

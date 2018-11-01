@@ -22,8 +22,6 @@ public class MenuController implements Initializable {
 
     @FXML private MenuItem saveMenu;
     @FXML private MenuItem saveAsMenu;
-    @FXML private MenuItem showToolsMenu;
-    @FXML private MenuItem hideToolsMenu;
     @FXML private MenuItem undoMenu;
     @FXML private MenuItem redoMenu;
     @FXML private MenuItem pasteMenu;
@@ -186,36 +184,24 @@ public class MenuController implements Initializable {
     }
 
     /**
-     * Shows the ToolBar popup window
+     * Toggles the visibility of the ToolBar popup window
      */
     @FXML
-    private void showToolbarAction() {
+    private void toggleToolbarAction() {
 
         if(this.toolBar == null) return;
-        this.toolBar.show();
 
-        this.hideToolsMenu.setDisable(false);
-        this.showToolsMenu.setDisable(true);
+        if(this.toolBar.isShowing())
+            this.toolBar.hide();
+        else
+            this.toolBar.show();
     }
 
     /**
-     * Hides the ToolBar popup window
+     * Toggles the visibility of the ToolBar settings popup window
      */
     @FXML
-    private void hideToolbarAction() {
-
-        if(this.toolBar == null) return;
-        this.toolBar.hide();
-
-        this.showToolsMenu.setDisable(false);
-        this.hideToolsMenu.setDisable(true);
-    }
-
-    /**
-     * Shows the ToolBar settings popup window
-     */
-    @FXML
-    private void showToolSettingsAction() {
+    private void toggleSettingsAction() {
 
         if(this.toolBar == null) return;
         this.toolBar.toggleSettingsWindow();
@@ -232,7 +218,7 @@ public class MenuController implements Initializable {
         this.toolBar = toolBar;
         this.toolBar.setOnCloseRequest(event -> {
 
-            this.hideToolbarAction();
+            this.toolBar.hide();
             event.consume();
         });
     }

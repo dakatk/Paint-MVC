@@ -65,14 +65,10 @@ public class ResizeController implements Initializable {
     @FXML
     private void incrementWidth() {
 
-        int canvasWidth = this.widthInput.getValue();
-        this.widthInput.setValue(canvasWidth + 1);
+        this.widthInput.setValue(this.widthInput.getValue() + 1);
 
-        if(this.widthDec.isDisabled())
-            this.widthDec.setDisable(false);
-
-        if(this.widthInput.atMaxValue())
-            this.widthInc.setDisable(true);
+        this.widthInc.setDisable(this.widthInput.atMaxValue());
+        this.widthDec.setDisable(false);
     }
 
     /**
@@ -81,14 +77,10 @@ public class ResizeController implements Initializable {
     @FXML
     private void decrementWidth() {
 
-        int canvasWidth = this.widthInput.getValue();
-        this.widthInput.setValue(canvasWidth - 1);
+        this.widthInput.setValue(this.widthInput.getValue() - 1);
 
-        if(this.widthInc.isDisabled())
-            this.widthInc.setDisable(false);
-
-        if(this.widthInput.atMinValue())
-            this.widthDec.setDisable(true);
+        this.widthDec.setDisable(this.widthInput.atMinValue());
+        this.widthInc.setDisable(false);
     }
 
     /**
@@ -97,14 +89,10 @@ public class ResizeController implements Initializable {
     @FXML
     private void incrementHeight() {
 
-        int canvasHeight = this.heightInput.getValue();
-        this.heightInput.setValue(canvasHeight + 1);
+        this.heightInput.setValue(this.heightInput.getValue() + 1);
 
-        if(this.heightDec.isDisabled())
-            this.heightDec.setDisable(false);
-
-        if(this.heightInput.atMaxValue())
-            this.heightInc.setDisable(true);
+        this.heightInc.setDisable(this.heightInput.atMaxValue());
+        this.heightDec.setDisable(false);
     }
 
     /**
@@ -113,14 +101,10 @@ public class ResizeController implements Initializable {
     @FXML
     private void decrementHeight() {
 
-        int canvasHeight = this.heightInput.getValue();
-        this.heightInput.setValue(canvasHeight - 1);
+        this.heightInput.setValue(this.heightInput.getValue() - 1);
 
-        if(this.heightInc.isDisabled())
-            this.heightInc.setDisable(false);
-
-        if(this.heightInput.atMinValue())
-            this.heightDec.setDisable(true);
+        this.heightDec.setDisable(this.heightInput.atMinValue());
+        this.heightInc.setDisable(false);
     }
 
     /**

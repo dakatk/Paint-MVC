@@ -1,5 +1,6 @@
 package com.dusten.paint.components;
 
+import javafx.beans.NamedArg;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.TextField;
@@ -15,15 +16,18 @@ import java.util.concurrent.Callable;
  */
 public class IntegerField extends TextField {
 
-    private static final int MAX_VALUE = 10000;
-    private static final int MIN_VALUE = 1;
-
     private IntegerProperty value;
     private Callable<Void> onUpdate;
 
-    public IntegerField() {
+    private int maxValue;
+    private int minValue;
+
+    public IntegerField(@NamedArg("maxValue") int maxValue, @NamedArg("minValue") int minValue) {
 
         this.value = new SimpleIntegerProperty();
+        this.maxValue = maxValue;
+        this.minValue = minValue;
+
         this.setValue(0);
 
         /*
@@ -52,7 +56,7 @@ public class IntegerField extends TextField {
             if(newValue == null || newValue.isEmpty())
                 this.value.setValue(0);
 
-            else if(MIN_VALUE > Integer.valueOf(newValue) || Integer.valueOf(newValue) > MAX_VALUE)
+            else if(this.minValue > Integer.valueOf(newValue) || Integer.valueOf(newValue) > this.maxValue)
                 this.textProperty().setValue(oldValue);
 
             if(!this.textProperty().get().isEmpty())
@@ -76,7 +80,7 @@ public class IntegerField extends TextField {
      */
     public void setValue(int newValue) {
 
-        if(newValue > MAX_VALUE || newValue < MIN_VALUE)
+        if(newValue > this.maxValue || newValue < this.minValue)
             return;
 
         this.value.setValue(newValue);
@@ -87,14 +91,14 @@ public class IntegerField extends TextField {
      * @return True when the field value is greater than or equal to MAX_VALUE, otherwise false
      */
     public boolean atMaxValue() {
-        return this.value.getValue() >= MAX_VALUE;
+        return this.value.getValue() >= this.maxValue;
     }
 
     /**
      * @return True when the field value is less than or equal to MIN_VALUE, otherwise false
      */
     public boolean atMinValue() {
-        return this.value.getValue() <= MIN_VALUE;
+        return this.value.getValue() <= this.minValue;
     }
 
     public void setOnUpdateCall(Callable<Void> onUpdate) {

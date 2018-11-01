@@ -44,9 +44,9 @@ public class ShapeRasterize {
 
     /**
      *
-     * @param paint
-     * @param x
-     * @param y
+     * @param paint The paint color to draw the arc with
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
      */
     public void setArc(Paint paint, double x, double y) {
 
@@ -98,6 +98,7 @@ public class ShapeRasterize {
      * mouse position, then redraw
      *
      * @param context The current GraphicsContext to render the line to
+     * @param lineWeight Weight in pixels of the line to be drawn
      * @param x Current mouse pointer 'x' position on canvas
      * @param y Current mouse pointer 'y' position on canvas
      */
@@ -119,11 +120,13 @@ public class ShapeRasterize {
     }
 
     /**
+     * Move current arc on screen to a new endX and endY based on the
+     * mouse position, then redraw
      *
-     * @param context
-     * @param lineWeight
-     * @param x
-     * @param y
+     * @param context The current GraphicsContext to render the arc to
+     * @param lineWeight Weight in pixels of the arc to be drawn
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
      */
     public void renderArc(GraphicsContext context, double lineWeight, double x, double y) {
 
@@ -150,25 +153,44 @@ public class ShapeRasterize {
         context.setStroke(currStroke);
     }
 
+    /**
+     * Move current ellipse on screen to a new centerX and centerY
+     * based on the mouse position, then redraw
+     *
+     * @param context The current GraphicsContext to render the ellipse to
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
+     */
     public void renderFillEllipse(GraphicsContext context, double x, double y) {
         this.renderEllipse(context, null, x, y);
     }
 
+    /**
+     * Move current ellipse on screen to a new centerX and centerY
+     * based on the mouse position, then redraw
+     *
+     * @param context The current GraphicsContext to render the ellipse to
+     * @param lineWeight Weight in pixels of the ellipse to be drawn
+     * @param x Current mouse pointer 'x' position on canvas
+     * @param y Current mouse pointer 'y' position on canvas
+     */
     public void renderDrawEllipse(GraphicsContext context, double lineWeight, double x, double y) {
         this.renderEllipse(context, lineWeight, x, y);
     }
 
-    /**
-     *
-     * @param context
-     * @param lineWeight
-     * @param x
-     * @param y
-     */
     private void renderEllipse(GraphicsContext context, Double lineWeight, double x, double y) {
 
-        this.tempEllipse.setRadiusX(Math.abs(x - this.tempEllipse.getCenterX()));
-        this.tempEllipse.setRadiusY(Math.abs(y - this.tempEllipse.getCenterY()));
+        this.tempEllipse.setRadiusX(x - this.tempEllipse.getCenterX());
+        this.tempEllipse.setRadiusY(y - this.tempEllipse.getCenterY());
+
+        double renderX = this.tempEllipse.getCenterX();
+        double renderY = this.tempEllipse.getCenterY();
+
+        if(this.tempEllipse.getRadiusX() < 0.0)
+            renderX += this.tempEllipse.getRadiusX() * 2.0;
+
+        if(this.tempEllipse.getRadiusY() < 0.0)
+            renderY += this.tempEllipse.getRadiusY() * 2.0;
 
         if(lineWeight != null) {
 
@@ -177,8 +199,7 @@ public class ShapeRasterize {
 
             context.setStroke(this.tempEllipse.getPaint());
             context.setLineWidth(lineWeight);
-            context.strokeOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
-                    this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
+            context.strokeOval(renderX, renderY, this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
 
             context.setLineWidth(currWeight);
             context.setFill(currStroke);
@@ -188,8 +209,7 @@ public class ShapeRasterize {
             Paint currFill = context.getFill();
 
             context.setFill(this.tempEllipse.getPaint());
-            context.fillOval(this.tempEllipse.getCenterX(), this.tempEllipse.getCenterY(),
-                    this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
+            context.fillOval(renderX, renderY, this.tempEllipse.getRadiusX(), this.tempEllipse.getRadiusY());
 
             context.setFill(currFill);
         }

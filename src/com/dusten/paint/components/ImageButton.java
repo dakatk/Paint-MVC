@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
  * A togglable button with an image representaion instead of text.
  * Used primarily for the ToolBar window
  */
+@SuppressWarnings("unused")
 public class ImageButton extends ToggleButton {
 
     private ToolsEnum enumToolType;

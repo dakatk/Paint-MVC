@@ -2,9 +2,10 @@ package com.dusten.paint.controllers;
 
 import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.components.ImageButton;
+import com.dusten.paint.components.IntegerField;
+import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -34,7 +35,10 @@ public class ToolSettingsController implements Initializable {
     @FXML private ComboBox<String> fontNames;
     @FXML private Slider fillTolerance;
     @FXML private Slider lineWeight;
-    @FXML private Slider fontWeight;
+
+    @FXML private IntegerField fontSize;
+    @FXML private Button fontSizeInc;
+    @FXML private Button fontSizeDec;
 
     @FXML private TabPane parentPane;
 
@@ -50,6 +54,9 @@ public class ToolSettingsController implements Initializable {
 
             this.fontNames.setTooltip(new Tooltip(newValue));
 
+            if(this.toolBar != null)
+                this.toolBar.selectTool(ToolsEnum.TEXT);
+
             if(this.canvas != null)
                 this.canvas.setFontName(newValue);
         });
@@ -59,6 +66,9 @@ public class ToolSettingsController implements Initializable {
         this.fillTolerance.valueProperty().addListener((observable, oldValue, newValue) -> {
 
             this.fillTolerance.setTooltip(new Tooltip(String.format("%.2f%%", this.fillTolerance.getValue())));
+
+            if(this.toolBar != null)
+                this.toolBar.selectTool(ToolsEnum.BUCKET);
 
             if(this.canvas != null)
                 this.canvas.setFillTolerance(this.fillTolerance.getValue() / 100.0);
@@ -72,17 +82,20 @@ public class ToolSettingsController implements Initializable {
                 this.canvas.setLineWeight(this.lineWeight.getValue());
         });
 
-        this.fontWeight.valueProperty().addListener((observable, oldValue, newValue) -> {
+        this.fontSize.setOnUpdateCall(() -> {
 
-            this.fontWeight.setTooltip(new Tooltip(String.valueOf((int)this.fontWeight.getValue()) + "pt"));
+            this.fontSizeInc.setDisable(this.fontSize.atMaxValue());
+            this.fontSizeDec.setDisable(this.fontSize.atMinValue());
 
             if(this.canvas != null)
-                this.canvas.setFontWeight(this.fontWeight.getValue());
+                this.canvas.setFontWeight(this.fontSize.getValue());
+
+            return null;
         });
 
         this.fillTolerance.adjustValue(DrawableCanvas.DEFAULT_FILL_TOLERANCE * 100);
         this.lineWeight.adjustValue(DrawableCanvas.DEFAULT_LINE_WEIGHT);
-        this.fontWeight.adjustValue(DrawableCanvas.DEFAULT_FONT_WEIGHT);
+        this.fontSize.setValue(12);
 
         ToggleGroup selectModes = new ToggleGroup();
         selectModes.selectedToggleProperty().addListener((observable, oldValue, newVale) -> {
@@ -153,6 +166,24 @@ public class ToolSettingsController implements Initializable {
         this.tabsByName = new HashMap<>();
         for(Tab tab : this.parentPane.getTabs())
             this.tabsByName.put(tab.getText(), tab);
+    }
+
+    @FXML
+    private void incrementFontSize() {
+
+        this.fontSize.setValue(this.fontSize.getValue() + 1);
+
+        this.fontSizeInc.setDisable(this.fontSize.atMaxValue());
+        this.fontSizeDec.setDisable(false);
+    }
+
+    @FXML
+    private void decrementFontSize() {
+
+        this.fontSize.setValue(this.fontSize.getValue() - 1);
+
+        this.fontSizeDec.setDisable(this.fontSize.atMinValue());
+        this.fontSizeDec.setDisable(false);
     }
 
     public void selectTab(@NotNull String tabName) {

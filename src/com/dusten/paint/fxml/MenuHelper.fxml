@@ -40,15 +40,12 @@
         <MenuItem fx:id="pasteMenu" text="Paste" onAction="#pasteAction"
                   accelerator="Shortcut+V" disable="true"/>
     </Menu>
-    <Menu text="Toolbar">
-        <MenuItem fx:id="showToolsMenu" text="Show..." onAction="#showToolbarAction"
-                  accelerator="Shortcut+T" disable="true" />
+    <Menu text="Tools">
+        <MenuItem text="Toggle Toolbar" onAction="#toggleToolbarAction"
+                  accelerator="Shortcut+T" />
 
-        <MenuItem fx:id="hideToolsMenu" text="Hide..." onAction="#hideToolbarAction"
+        <MenuItem text="Toggle Settings" onAction="#toggleSettingsAction"
                   accelerator="Shortcut+Shift+T" />
-
-        <MenuItem text="Settings..." onAction="#showToolSettingsAction"
-                  accelerator="Shortcut+Alt+S" />
     </Menu>
 
 </MenuBar>

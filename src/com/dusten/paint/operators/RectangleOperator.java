@@ -6,6 +6,9 @@ import com.sun.istack.internal.Nullable;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Paint;
 
+/**
+ * @author Dusten Knull
+ */
 public class RectangleOperator implements PaintOperator {
 
     private Double lineWeight;

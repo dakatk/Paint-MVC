@@ -16,7 +16,6 @@ public class EllipseOperator implements PaintOperator {
     private double x;
     private double y;
 
-
     public EllipseOperator(@NotNull Ellipse ellipse, @Nullable Double lineWeight) {
 
         this.paint = ellipse.getPaint();

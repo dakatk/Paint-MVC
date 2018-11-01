@@ -27,6 +27,10 @@ public class ToolBarPopup extends PopupWindow<ToolBarController> {
         this.controller.setParent(this);
     }
 
+    public void toggleSettingsWindow() {
+        this.controller.toggleSettings();
+    }
+
     public Scene getParentScene() {
         return this.parentScene;
     }
@@ -35,12 +39,12 @@ public class ToolBarPopup extends PopupWindow<ToolBarController> {
         return this.controller.getSettingsWindow();
     }
 
-    public void setParentScene(@NotNull Scene parentScene) {
-        this.parentScene = parentScene;
+    public void selectTool(@NotNull ToolsEnum toolType) {
+        this.controller.selectTool(toolType);
     }
 
-    public void toggleSettingsWindow() {
-        this.controller.toggleSettingsAction();
+    public void setParentScene(@NotNull Scene parentScene) {
+        this.parentScene = parentScene;
     }
 
     public void setCanvas(@NotNull DrawableCanvas canvas) {
