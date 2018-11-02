@@ -43,6 +43,10 @@ public class PaintController implements Initializable {
         });
     }
 
+    /**
+     * @param parentWidth The width of the parent window
+     * @param parentHeight The height of the parent window
+     */
     public void checkScrollbarVisibility(double parentWidth, double parentHeight) {
 
         if(this.canvasHelper.getCanvas().getWidth() >= parentWidth) {

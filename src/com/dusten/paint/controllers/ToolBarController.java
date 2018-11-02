@@ -183,7 +183,7 @@ public class ToolBarController implements Initializable {
     }
 
     /**
-     *
+     * Toggles the visibilitty of the settings window
      */
     public void toggleSettings() {
 
@@ -197,7 +197,7 @@ public class ToolBarController implements Initializable {
     }
 
     /**
-     * @param toolType
+     * @param toolType The {@link ToolsEnum} attached to the button that is meant to be selected
      */
     public void selectTool(ToolsEnum toolType) {
 

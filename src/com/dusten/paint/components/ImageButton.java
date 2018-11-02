@@ -30,9 +30,8 @@ public class ImageButton extends ToggleButton {
     }
 
     /**
-     *
-     * @param url
-     * @return
+     * @param url Path to the image file to be used
+     * @return The {@link ImageView} to be shown on the button
      */
     private ImageView createGraphic(String url) {
 
@@ -48,9 +47,8 @@ public class ImageButton extends ToggleButton {
     }
 
     /**
-     *
-     * @param enumToolType
-     * @param canvas
+     * @param enumToolType The tooltype attached to this button
+     * @param canvas {@link DrawableCanvas} object to be affected by this button being pressed
      */
     public void setEnumToolType(ToolsEnum enumToolType, DrawableCanvas canvas) {
 

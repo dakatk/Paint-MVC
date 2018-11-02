@@ -17,6 +17,8 @@ import java.util.ResourceBundle;
 
 /**
  * @author Dusten Knull
+ *
+ * Controller for ToolSettings.fxml
  */
 public class ToolSettingsController implements Initializable {
 
@@ -168,6 +170,9 @@ public class ToolSettingsController implements Initializable {
             this.tabsByName.put(tab.getText(), tab);
     }
 
+    /**
+     *
+     */
     @FXML
     private void incrementFontSize() {
 
@@ -177,6 +182,9 @@ public class ToolSettingsController implements Initializable {
         this.fontSizeDec.setDisable(false);
     }
 
+    /**
+     *
+     */
     @FXML
     private void decrementFontSize() {
 
@@ -186,6 +194,9 @@ public class ToolSettingsController implements Initializable {
         this.fontSizeDec.setDisable(false);
     }
 
+    /**
+     * @param tabName The name of the tab to be selected
+     */
     public void selectTab(@NotNull String tabName) {
         this.parentPane.getSelectionModel().select(this.tabsByName.get(tabName));
     }

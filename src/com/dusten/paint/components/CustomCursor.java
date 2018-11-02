@@ -8,8 +8,10 @@ import java.io.InputStream;
 
 /**
  * @author Dusten Knull
+ *
+ * Custom cursor using custom made images
  */
-// TODO fix image corruption?
+// TODO fix image corruption on Mac?
 public class CustomCursor {
 
     public static final ImageCursor BUCKET = new CustomCursor(FilesEnum.BUCKET_CURSOR, 1, 1).getCursor();

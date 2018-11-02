@@ -8,6 +8,9 @@ import java.awt.*;
 
 /**
  * @author Dusten Knull
+ *
+ * Stores values to be used when copy/pasting from the
+ * application's clipboard
  */
 class Clipboard {
 
@@ -17,7 +20,6 @@ class Clipboard {
     private boolean cut;
 
     /**
-     *
      * @param sourceImage The source image
      * @param sourceRect The source area of the image to draw
      * @param cut Whether or not to cut versus copy

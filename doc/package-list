@@ -1,0 +1,11 @@
+com.dusten.paint.components
+com.dusten.paint.controllers
+com.dusten.paint.enums
+com.dusten.paint.fxml
+com.dusten.paint.helpers
+com.dusten.paint.main
+com.dusten.paint.operators
+com.dusten.paint.operators.tasks
+com.dusten.paint.popup
+com.dusten.paint.primitives
+com.dusten.paint.rasterizers

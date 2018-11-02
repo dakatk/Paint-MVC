@@ -3,6 +3,11 @@ package com.dusten.paint.primitives;
 import com.sun.istack.internal.NotNull;
 import javafx.scene.paint.Paint;
 
+/**
+ * @author Dusten Knull
+ *
+ * Primitive line object for drawing with GraphicsContext
+ */
 public class Line {
 
     private Paint paint;
