@@ -2,10 +2,9 @@
 
 <?import com.dusten.paint.helpers.CanvasHelper?>
 <?import com.dusten.paint.helpers.MenuHelper?>
-<?import javafx.scene.layout.StackPane?>
-<?import java.net.URL?>
 <?import javafx.scene.control.ScrollBar?>
-
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <StackPane fx:controller="com.dusten.paint.controllers.PaintController"
            xmlns:fx="http://javafx.com/fxml" styleClass="parentPane">
 

@@ -7,7 +7,6 @@ import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.text.Font;
 
@@ -18,9 +17,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for ToolSettings.fxml
+ * {@link ControllerBase} for ToolSettings.fxml
  */
-public class ToolSettingsController implements Initializable {
+public class ToolSettingsController extends ControllerBase {
 
     @FXML private ImageButton rectangleFillMode;
     @FXML private ImageButton rectangleDrawMode;

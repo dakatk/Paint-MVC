@@ -7,7 +7,6 @@ import com.dusten.paint.popup.ToolBarPopup;
 import com.dusten.paint.popup.ToolSettingsPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ToggleGroup;
@@ -23,9 +22,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for ToolBar.fxml
+ * {@link ControllerBase} for ToolBar.fxml
  */
-public class ToolBarController implements Initializable {
+public class ToolBarController extends ControllerBase {
 
     @FXML private ImageButton selectToolButton;
     @FXML private ImageButton paintBucketButton;

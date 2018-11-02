@@ -4,7 +4,6 @@ import com.dusten.paint.components.IntegerField;
 import com.dusten.paint.popup.ResizePopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
 import java.net.URL;
@@ -13,9 +12,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for ResizePopup.fxml
+ * {@link ControllerBase} for ResizePopup.fxml
  */
-public class ResizeController implements Initializable {
+public class ResizeController extends ControllerBase {
 
     @FXML private IntegerField widthInput;
     @FXML private IntegerField heightInput;

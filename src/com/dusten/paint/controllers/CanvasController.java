@@ -4,7 +4,6 @@ import com.dusten.paint.components.DrawableCanvas;
 import com.dusten.paint.helpers.CanvasHelper;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.shape.Rectangle;
@@ -15,9 +14,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for ImageHelper.fxml
+ * {@link ControllerBase} for ImageHelper.fxml
  */
-public class CanvasController implements Initializable {
+public class CanvasController extends ControllerBase {
 
     @FXML private Rectangle background;
     @FXML private DrawableCanvas canvas;

@@ -1,13 +1,13 @@
 package com.dusten.paint.components;
 
 import com.dusten.paint.controllers.CanvasController;
+import com.dusten.paint.enums.ToolsEnum;
 import com.dusten.paint.helpers.StatusSet;
+import com.dusten.paint.operators.*;
 import com.dusten.paint.primitives.Rectangle;
 import com.dusten.paint.rasterizers.FreeDrawRasterize;
 import com.dusten.paint.rasterizers.SelectionRasterize;
 import com.dusten.paint.rasterizers.ShapeRasterize;
-import com.dusten.paint.enums.ToolsEnum;
-import com.dusten.paint.operators.*;
 import com.dusten.paint.rasterizers.TextRasterize;
 import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
@@ -49,7 +49,7 @@ public class DrawableCanvas extends Canvas {
     private Clipboard clipboard;
     private ToolsEnum toolType;
 
-    // Edit history snd current edit index for use with undo/redo
+    // Edit history and current edit index for use with undo/redo
     private List<PaintOperator> editHistory;
     private int editIndex;
 

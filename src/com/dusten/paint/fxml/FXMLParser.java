@@ -1,5 +1,6 @@
 package com.dusten.paint.fxml;
 
+import com.dusten.paint.controllers.ControllerBase;
 import com.dusten.paint.enums.FilesEnum;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,10 +11,10 @@ import java.io.IOException;
  * Used for universally loading values from FXML files
  *
  * @author Dusten Knull
- * @param <T> Controller class type
+ * @param <T> ControllerBase class type
  * @param <U> Parent class type
  */
-public class FXMLParser<T, U extends Node> {
+public class FXMLParser<T extends ControllerBase, U extends Node> {
 
     private T controller;
     private U parent;

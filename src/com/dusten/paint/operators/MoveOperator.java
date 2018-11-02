@@ -4,7 +4,7 @@ import com.dusten.paint.primitives.Rectangle;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
-import java.awt.Point;
+import java.awt.*;
 
 public class MoveOperator implements PaintOperator {
 

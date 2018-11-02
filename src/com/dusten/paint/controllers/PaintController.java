@@ -5,7 +5,6 @@ import com.dusten.paint.helpers.MenuHelper;
 import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollBar;
 import javafx.stage.Stage;
 
@@ -15,9 +14,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for PaintApp.fxml
+ * {@link ControllerBase} for PaintApp.fxml
  */
-public class PaintController implements Initializable {
+public class PaintController extends ControllerBase {
 
     @FXML private MenuHelper menuHelper;
     @FXML private CanvasHelper canvasHelper;

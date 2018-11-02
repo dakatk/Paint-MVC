@@ -1,5 +1,6 @@
 package com.dusten.paint.popup;
 
+import com.dusten.paint.controllers.ControllerBase;
 import com.dusten.paint.enums.FilesEnum;
 import com.dusten.paint.fxml.FXMLParser;
 import javafx.scene.Parent;
@@ -14,9 +15,9 @@ import java.io.IOException;
  * and is always shown relative to another window
  *
  * @author Dusten Knull
- * @param <T> Controller class of this popup window type
+ * @param <T> ControllerBase class of this popup window type
  */
-public class PopupWindow<T> extends Stage {
+public class PopupWindow<T extends ControllerBase> extends Stage {
 
     protected T controller;
 

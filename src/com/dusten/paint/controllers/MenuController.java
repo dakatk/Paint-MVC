@@ -1,11 +1,10 @@
 package com.dusten.paint.controllers;
 
 import com.dusten.paint.helpers.CanvasHelper;
-import com.dusten.paint.popup.ToolBarPopup;
 import com.dusten.paint.popup.ResizePopup;
+import com.dusten.paint.popup.ToolBarPopup;
 import com.sun.istack.internal.NotNull;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -16,9 +15,9 @@ import java.util.ResourceBundle;
 /**
  * @author Dusten Knull
  *
- * Controller for MenuHelper.fxml
+ * {@link ControllerBase} for MenuHelper.fxml
  */
-public class MenuController implements Initializable {
+public class MenuController extends ControllerBase {
 
     @FXML private MenuItem saveMenu;
     @FXML private MenuItem saveAsMenu;
